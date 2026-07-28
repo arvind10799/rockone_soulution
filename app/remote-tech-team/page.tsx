@@ -51,8 +51,8 @@ const processSteps = [
   },
   {
     step: "03",
-    title: "Reserved hours and priority",
-    body: "Your agreed hours are protected. Tasks are acknowledged, planned, delivered, and reported through a clear channel."
+    title: "Agreed shift and first priority",
+    body: "During your agreed support shift, your tasks stay first priority. If a task needs the full shift, we keep focus on it until the shift is used."
   },
   {
     step: "04",
@@ -78,7 +78,7 @@ const comparison = [
     label: "Reliability",
     fullTime: "Available but may be underused",
     freelancer: "Depends on availability",
-    rockOne: "Managed delivery and backup coverage"
+    rockOne: "First-priority work during your agreed shift"
   },
   {
     label: "Management",
@@ -108,7 +108,7 @@ const plans = [
 
 const trustPoints = [
   "Bengaluru-based agency team",
-  "Reserved hours instead of vague priority",
+  "Agreed support shift with first-priority task handling",
   "Backup coverage when one person is unavailable",
   "NDA and confidentiality-friendly workflow",
   "Clear reporting and one point of contact"
@@ -121,7 +121,7 @@ const faqs = [
   },
   {
     q: "How do you guarantee priority?",
-    a: "We avoid vague promises. Your plan defines reserved hours, response expectations, communication channels, and reporting so your tasks do not get lost behind random freelance availability."
+    a: "Your plan defines an agreed support shift. During that shift, your tasks are handled on first priority instead of being treated like random freelance work. If the task needs the whole shift, we keep the focus on your work for that shift."
   },
   {
     q: "Can we increase or reduce hours later?",
@@ -133,7 +133,7 @@ const faqs = [
   },
   {
     q: "What if we need urgent support?",
-    a: "Urgent support can be added as a separate agreement depending on your stack and expected response time. We will clarify this before work starts."
+    a: "Inside your agreed timing shift, urgent tasks are handled on first priority, even if that task needs the full shift. If urgent support is needed outside the agreed shift, we can set a separate agreement based on your stack, expected response time, and availability."
   }
 ];
 
@@ -152,7 +152,7 @@ export default function RemoteTechTeamPage() {
             <p>
               For companies that have regular technical work, but only one or two
               hours a day or a few hours a week, Rock One gives you a reliable remote
-              resource with reserved priority.
+              resource whose agreed timing shift is focused on your tasks first.
             </p>
             <div className="remote-hero-actions">
               <Link href="/#contact" className="about-btn-primary">
@@ -166,7 +166,7 @@ export default function RemoteTechTeamPage() {
 
           <div className="remote-hero-panel" aria-label="Reserved remote support model">
             <div className="remote-panel-top">
-              <span>Reserved hours</span>
+              <span>Agreed timing shift</span>
               <strong>Priority support</strong>
             </div>
             <div className="remote-schedule-card">
@@ -212,7 +212,8 @@ export default function RemoteTechTeamPage() {
             <h2 id="remote-solution-title">A remote resource that feels like your in-house support team.</h2>
             <p>
               You get continuity, managed delivery, and protected hours without the
-              cost and operational burden of hiring a full-time employee.
+              cost and operational burden of hiring a full-time employee. During
+              the agreed shift, your work stays first priority.
             </p>
           </div>
           <div className="remote-work-grid">

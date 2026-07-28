@@ -135,7 +135,7 @@ const trustPoints = [
 const faqs = [
   {
     q: "Is this person only working for us?",
-    a: "The model is based on an agreed support shift. During that shift, your work is treated as first priority. If you need a fully dedicated full-time resource beyond shift-based support, we can discuss that separately."
+    a: "The model is based on an agreed support shift. During that shift, your work is treated as first priority. If one urgent task needs the full shift, we keep focus on that task for the agreed shift."
   },
   {
     q: "How do you guarantee priority?",

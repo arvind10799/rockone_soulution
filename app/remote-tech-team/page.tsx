@@ -23,6 +23,24 @@ const painPoints = [
   "Hiring full-time means salary, HR, training, benefits, and idle capacity."
 ];
 
+const priorityRules = [
+  {
+    title: "During your shift",
+    body:
+      "Your tasks are handled first. If an urgent task comes inside the agreed timing shift, we put it ahead of the normal queue."
+  },
+  {
+    title: "If it takes the full shift",
+    body:
+      "That is still part of the model. If one important task needs the entire agreed shift, we stay focused on that task."
+  },
+  {
+    title: "Outside the shift",
+    body:
+      "Urgent work outside the agreed timing shift is handled through a separate agreement based on response time and availability."
+  }
+];
+
 const workItems = [
   "Website updates and bug fixes",
   "WordPress, Shopify, and CMS tasks",
@@ -66,7 +84,7 @@ const comparison = [
     label: "Cost",
     fullTime: "Full monthly salary and overhead",
     freelancer: "Variable task-by-task pricing",
-    rockOne: "Pay for reserved capacity you need"
+    rockOne: "Pay for the agreed shift you need"
   },
   {
     label: "Continuity",
@@ -91,18 +109,18 @@ const comparison = [
 const plans = [
   {
     title: "Daily Support",
-    body: "For teams that need small technical work every business day.",
-    detail: "Fixed daily reserved hours"
+    body: "For teams that need small technical work every business day with first-priority handling during the daily shift.",
+    detail: "Fixed daily support shift"
   },
   {
     title: "Weekly Support",
-    body: "For recurring updates, reports, improvements, and maintenance.",
-    detail: "Planned weekly capacity"
+    body: "For recurring updates, reports, improvements, and maintenance handled inside planned weekly support windows.",
+    detail: "Planned weekly shifts"
   },
   {
     title: "Monthly Retainer",
-    body: "For flexible ongoing work that changes week to week.",
-    detail: "Block of hours per month"
+    body: "For flexible ongoing work that changes week to week, with agreed timing blocks and priority rules defined upfront.",
+    detail: "Monthly support blocks"
   }
 ];
 
@@ -117,7 +135,7 @@ const trustPoints = [
 const faqs = [
   {
     q: "Is this person only working for us?",
-    a: "The model is based on reserved capacity. Depending on your plan, we block daily, weekly, or monthly hours for your work and protect that schedule. If you need a fully dedicated full-time resource, we can discuss that separately."
+    a: "The model is based on an agreed support shift. During that shift, your work is treated as first priority. If you need a fully dedicated full-time resource beyond shift-based support, we can discuss that separately."
   },
   {
     q: "How do you guarantee priority?",
@@ -152,7 +170,8 @@ export default function RemoteTechTeamPage() {
             <p>
               For companies that have regular technical work, but only one or two
               hours a day or a few hours a week, Rock One gives you a reliable remote
-              resource whose agreed timing shift is focused on your tasks first.
+              resource whose agreed timing shift is focused on your tasks first,
+              even when one urgent task needs the full shift.
             </p>
             <div className="remote-hero-actions">
               <Link href="/#contact" className="about-btn-primary">
@@ -172,7 +191,7 @@ export default function RemoteTechTeamPage() {
             <div className="remote-schedule-card">
               <span>Weekly capacity</span>
               <strong>8-20 hrs</strong>
-              <p>Website, software, SEO, automation, and reporting tasks handled by one managed partner.</p>
+              <p>Inside this shift, your tasks stay first priority. Outside this shift, urgent support can be agreed separately.</p>
             </div>
             <div className="remote-panel-list">
               <div>
@@ -181,11 +200,11 @@ export default function RemoteTechTeamPage() {
               </div>
               <div>
                 <span />
-                Clear task tracking and updates
+                Urgent in-shift tasks handled first
               </div>
               <div>
                 <span />
-                No salary, HR, or idle capacity
+                Outside-shift urgency agreed separately
               </div>
             </div>
           </div>
@@ -219,6 +238,26 @@ export default function RemoteTechTeamPage() {
           <div className="remote-work-grid">
             {workItems.map((item) => (
               <div key={item}>{item}</div>
+            ))}
+          </div>
+        </section>
+
+        <section className="remote-priority" aria-labelledby="remote-priority-title">
+          <div className="remote-section-head">
+            <span className="section-kicker about-kicker">Priority policy</span>
+            <h2 id="remote-priority-title">Your shift is protected for your work.</h2>
+            <p>
+              This is the main difference from hiring random freelancers. We define
+              the timing shift first, then your tasks stay first priority inside that
+              shift. Outside that shift, urgent support is agreed separately.
+            </p>
+          </div>
+          <div className="remote-priority-grid">
+            {priorityRules.map((rule) => (
+              <article key={rule.title}>
+                <h3>{rule.title}</h3>
+                <p>{rule.body}</p>
+              </article>
             ))}
           </div>
         </section>
@@ -285,7 +324,9 @@ export default function RemoteTechTeamPage() {
             <h2 id="remote-trust-title">A managed partner, not another loose freelancer.</h2>
             <p>
               We are a Bengaluru-based digital and technology agency, so your remote
-              resource is backed by process, supervision, and backup coverage.
+              resource is backed by process, supervision, and backup coverage. Your
+              agreed shift is protected for your work; outside-shift urgency is scoped
+              separately.
             </p>
           </div>
           <ul>
@@ -319,7 +360,8 @@ export default function RemoteTechTeamPage() {
             <h2 id="remote-cta-title">Need regular tech work, but not a full-time employee?</h2>
             <p>
               Tell us what tasks come up every day or week. We will suggest a remote
-              support model that fits your workload.
+              support model, agreed timing shift, and outside-shift urgent support
+              arrangement that fits your workload.
             </p>
             <div className="about-cta-actions">
               <Link href="/#contact" className="about-btn-primary">

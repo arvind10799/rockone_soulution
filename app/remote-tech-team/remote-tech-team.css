@@ -182,6 +182,7 @@
 }
 
 .remote-solution,
+.remote-priority,
 .remote-plans {
   background: linear-gradient(180deg, #f6f9fd 0%, #eef3f9 100%);
 }
@@ -218,6 +219,53 @@
   background: #ffffff;
   box-shadow: 0 14px 34px rgba(19, 39, 92, 0.05);
   font-weight: 700;
+}
+
+.remote-priority {
+  padding: clamp(56px, 8vh, 100px) max(24px, calc((100vw - 1160px) / 2));
+  background:
+    radial-gradient(circle at 16% 18%, rgba(243, 90, 43, 0.12), transparent 28%),
+    radial-gradient(circle at 84% 26%, rgba(16, 168, 223, 0.14), transparent 30%),
+    linear-gradient(160deg, #071120 0%, #101936 100%);
+}
+
+.remote-priority .remote-section-head h2 {
+  color: #ffffff;
+}
+
+.remote-priority .remote-section-head p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.remote-priority-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.remote-priority-grid article {
+  min-height: 230px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.065);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
+}
+
+.remote-priority-grid h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.24rem, 1.8vw, 1.62rem);
+  line-height: 1.15;
+}
+
+.remote-priority-grid p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.68;
 }
 
 .remote-process-grid,
@@ -383,6 +431,7 @@
   }
 
   .remote-work-grid,
+  .remote-priority-grid,
   .remote-process-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -400,6 +449,7 @@
   .remote-hero,
   .remote-problem,
   .remote-solution,
+  .remote-priority,
   .remote-process,
   .remote-comparison,
   .remote-plans,
@@ -414,6 +464,7 @@
 
   .remote-pain-grid,
   .remote-work-grid,
+  .remote-priority-grid,
   .remote-process-grid,
   .remote-plan-grid {
     grid-template-columns: 1fr;

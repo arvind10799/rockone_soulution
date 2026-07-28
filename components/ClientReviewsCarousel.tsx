@@ -22,10 +22,7 @@ export default function ClientReviewsCarousel({ reviews }: { reviews: Review[] }
   }, []);
 
   const pageCount = Math.max(1, reviews.length - visible + 1);
-
-  useEffect(() => {
-    setIndex((current) => Math.min(current, pageCount - 1));
-  }, [pageCount]);
+  const activeIndex = Math.min(index, pageCount - 1);
 
   useEffect(() => {
     if (pageCount <= 1) return;
@@ -56,7 +53,7 @@ export default function ClientReviewsCarousel({ reviews }: { reviews: Review[] }
           <div
             className="review-track"
             style={{
-              ["--i" as string]: index,
+              ["--i" as string]: activeIndex,
               ["--visible" as string]: visible
             }}
           >
@@ -99,7 +96,7 @@ export default function ClientReviewsCarousel({ reviews }: { reviews: Review[] }
             type="button"
             className="review-arrow"
             aria-label="Previous testimonial"
-            onClick={() => setIndex((current) => (current - 1 + pageCount) % pageCount)}
+            onClick={() => setIndex((activeIndex - 1 + pageCount) % pageCount)}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="m15 18-6-6 6-6" />
@@ -111,9 +108,9 @@ export default function ClientReviewsCarousel({ reviews }: { reviews: Review[] }
               <button
                 key={i}
                 type="button"
-                className={`review-dot${index === i ? " is-active" : ""}`}
+                className={`review-dot${activeIndex === i ? " is-active" : ""}`}
                 role="tab"
-                aria-selected={index === i}
+                aria-selected={activeIndex === i}
                 aria-label={`Go to slide ${i + 1}`}
                 onClick={() => setIndex(i)}
               />
@@ -124,7 +121,7 @@ export default function ClientReviewsCarousel({ reviews }: { reviews: Review[] }
             type="button"
             className="review-arrow"
             aria-label="Next testimonial"
-            onClick={() => setIndex((current) => (current + 1) % pageCount)}
+            onClick={() => setIndex((activeIndex + 1) % pageCount)}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="m9 18 6-6-6-6" />

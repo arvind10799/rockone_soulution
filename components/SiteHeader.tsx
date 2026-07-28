@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const navItems = [
+  { label: "Remote Team", href: "/remote-tech-team" },
   { label: "Blog", href: "/#blog" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/#contact" }
@@ -18,7 +19,7 @@ const services = [
 export default function SiteHeader({
   active
 }: {
-  active?: "home" | "about" | "services";
+  active?: "home" | "about" | "services" | "remote";
 }) {
   return (
     <header className="site-header">
@@ -56,7 +57,10 @@ export default function SiteHeader({
           {navItems.map((item) => (
             <Link
               className={`nav-link${
-                item.label === "About" && active === "about" ? " active" : ""
+                (item.label === "About" && active === "about") ||
+                (item.label === "Remote Team" && active === "remote")
+                  ? " active"
+                  : ""
               }`}
               href={item.href}
               key={item.label}
@@ -96,7 +100,10 @@ export default function SiteHeader({
             {navItems.map((item) => (
               <Link
                 className={
-                  item.label === "About" && active === "about" ? "active" : ""
+                  (item.label === "About" && active === "about") ||
+                  (item.label === "Remote Team" && active === "remote")
+                    ? "active"
+                    : ""
                 }
                 href={item.href}
                 key={item.label}

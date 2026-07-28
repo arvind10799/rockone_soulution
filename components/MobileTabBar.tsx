@@ -17,6 +17,7 @@ export default function MobileTabBar() {
   const isHome = pathname === "/";
   const isServices = pathname.startsWith("/services");
   const isAbout = pathname === "/about";
+  const isRemote = pathname === "/remote-tech-team";
 
   return (
     <nav className="mobile-tabbar" aria-label="Mobile navigation">
@@ -44,6 +45,15 @@ export default function MobileTabBar() {
         </svg>
       </Link>
 
+      <Link href="/remote-tech-team" className={`mobile-tab${isRemote ? " is-active" : ""}`}>
+        <svg viewBox="0 0 24 24" {...stroke} aria-hidden="true">
+          <circle cx="8" cy="8.5" r="3" />
+          <path d="M3.5 19c0-3 2-5 4.5-5s4.5 2 4.5 5" />
+          <path d="M14.5 6.5h6M14.5 10h4.5M14.5 15h6M14.5 18.5h4" />
+        </svg>
+        <span>Team</span>
+      </Link>
+
       <Link href="/about" className={`mobile-tab${isAbout ? " is-active" : ""}`}>
         <svg viewBox="0 0 24 24" {...stroke} aria-hidden="true">
           <circle cx="12" cy="8.5" r="3.4" />
@@ -51,14 +61,6 @@ export default function MobileTabBar() {
         </svg>
         <span>About</span>
       </Link>
-
-      <a href="/#contact" className="mobile-tab">
-        <svg viewBox="0 0 24 24" {...stroke} aria-hidden="true">
-          <rect x="3.5" y="5.5" width="17" height="13" rx="2.4" />
-          <path d="m4.5 7 7.5 5.5L19.5 7" />
-        </svg>
-        <span>Contact</span>
-      </a>
     </nav>
   );
 }

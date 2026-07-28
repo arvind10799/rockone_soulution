@@ -27,7 +27,7 @@ const priorityRules = [
   {
     title: "During your shift",
     body:
-      "Your tasks are handled first. If an urgent task comes inside the agreed timing shift, we put it ahead of the normal queue."
+      "During the agreed timing shift, our resource stays focused on your assigned tasks as first-priority work."
   },
   {
     title: "If it takes the full shift",

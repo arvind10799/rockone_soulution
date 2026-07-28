@@ -1098,6 +1098,7 @@ h1 {
   margin: 0 auto;
   position: relative;
   isolation: isolate;
+  padding-bottom: 0.08em;
 }
 
 .title-line {
@@ -1105,7 +1106,8 @@ h1 {
   flex-wrap: nowrap;
   justify-content: center;
   column-gap: 0.22em;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   white-space: nowrap;
 }
 

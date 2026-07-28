@@ -19,7 +19,7 @@ const iconProps = {
   strokeLinejoin: "round" as const
 };
 
-type Item = { title: string; body: string; icon: ReactNode };
+type Item = { title: string; body: string; icon: ReactNode; href?: string };
 
 const values: Item[] = [
   {
@@ -133,6 +133,19 @@ const services: Item[] = [
       <svg viewBox="0 0 24 24" {...iconProps}>
         <path d="M3 10v4h3l6 4V6L6 10z" />
         <path d="M16.5 9.5a4 4 0 0 1 0 5M19 7a7.5 7.5 0 0 1 0 10" />
+      </svg>
+    )
+  },
+  {
+    title: "Remote Team",
+    body:
+      "Dedicated remote support for recurring website, software, SEO, CRM, and automation tasks during an agreed first-priority shift.",
+    href: "/remote-tech-team",
+    icon: (
+      <svg viewBox="0 0 24 24" {...iconProps}>
+        <rect x="3.5" y="5" width="17" height="11.5" rx="2" />
+        <path d="M8 20h8M12 16.5V20M8 10.5h.01M11.5 10.5h.01M15 10.5h.01" />
+        <path d="M7.5 13.4h9" />
       </svg>
     )
   }
@@ -285,11 +298,22 @@ export default function AboutPage() {
           </div>
           <div className="about-services-grid">
             {services.map((service) => (
-              <article className="about-service-card" key={service.title}>
-                <span className="about-service-icon">{service.icon}</span>
-                <h3>{service.title}</h3>
-                <p>{service.body}</p>
-              </article>
+              service.href ? (
+                <Link className="about-service-card about-service-link" href={service.href} key={service.title}>
+                  <span className="about-service-icon">{service.icon}</span>
+                  <h3>{service.title}</h3>
+                  <p>{service.body}</p>
+                  <span className="about-service-more">
+                    Explore Remote Team {arrow}
+                  </span>
+                </Link>
+              ) : (
+                <article className="about-service-card" key={service.title}>
+                  <span className="about-service-icon">{service.icon}</span>
+                  <h3>{service.title}</h3>
+                  <p>{service.body}</p>
+                </article>
+              )
             ))}
           </div>
         </section>

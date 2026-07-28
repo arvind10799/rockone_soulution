@@ -18,6 +18,12 @@ export const metadata: Metadata = {
 
 const coverage = ["Design", "Build", "Automate", "Grow"];
 
+const remoteHighlights = [
+  "Agreed timing shift",
+  "First-priority task handling",
+  "Remote expert without full-time salary"
+];
+
 const arrow = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M5 12h14M13 6l6 6-6 6" />
@@ -62,6 +68,20 @@ export default function ServicesPage() {
                 </li>
               ))}
             </ul>
+            <div className="services-hero-proof" aria-label="Service delivery highlights">
+              <div>
+                <strong>16+</strong>
+                <span>Focused services</span>
+              </div>
+              <div>
+                <strong>4</strong>
+                <span>Connected delivery layers</span>
+              </div>
+              <div>
+                <strong>1</strong>
+                <span>Partner for website, systems, and growth</span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -75,17 +95,19 @@ export default function ServicesPage() {
             <div className="services-cat-head">
               <span className="services-cat-icon">{category.icon}</span>
               <div>
+                <span className="services-cat-count">{category.services.length} services</span>
                 <h2 id={`cat-${category.slug}`}>{category.name}</h2>
                 <p>{category.blurb}</p>
               </div>
             </div>
             <div className="services-cat-grid">
-              {category.services.map((service) => (
+              {category.services.map((service, index) => (
                 <Link
                   className="service-card"
                   key={service.slug}
                   href={`/services/${service.slug}`}
                 >
+                  <span className="service-card-index">{String(index + 1).padStart(2, "0")}</span>
                   <h3>{service.title}</h3>
                   <p>{service.tagline}</p>
                   <span className="service-card-more">
@@ -97,6 +119,31 @@ export default function ServicesPage() {
             </div>
           </section>
         ))}
+
+        <section className="services-remote-team" aria-labelledby="services-remote-team-title">
+          <div className="services-remote-copy">
+            <span className="section-kicker about-kicker">Remote team support</span>
+            <h2 id="services-remote-team-title">
+              Need regular technical work, but not a full-time employee?
+            </h2>
+            <p>
+              Our Remote Team model gives you a dedicated remote resource for
+              recurring website, software, SEO, CRM, and automation tasks. During
+              your agreed support shift, your work stays first priority.
+            </p>
+            <Link href="/remote-tech-team" className="about-btn-primary">
+              Explore Remote Team {arrow}
+            </Link>
+          </div>
+          <div className="services-remote-panel" aria-label="Remote team support highlights">
+            {remoteHighlights.map((item, index) => (
+              <div key={item}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{item}</strong>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section className="services-process" aria-labelledby="services-process-title">
           <div className="about-section-head">

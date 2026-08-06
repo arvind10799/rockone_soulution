@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const navItems = [
+  { label: "Work", href: "/work/auto-parts-crm" },
   { label: "Remote Team", href: "/remote-tech-team" },
   { label: "Blog", href: "/#blog" },
   { label: "About", href: "/about" },
@@ -19,7 +20,7 @@ const services = [
 export default function SiteHeader({
   active
 }: {
-  active?: "home" | "about" | "services" | "remote";
+  active?: "home" | "about" | "services" | "remote" | "work";
 }) {
   return (
     <header className="site-header">
@@ -58,7 +59,8 @@ export default function SiteHeader({
             <Link
               className={`nav-link${
                 (item.label === "About" && active === "about") ||
-                (item.label === "Remote Team" && active === "remote")
+                (item.label === "Remote Team" && active === "remote") ||
+                (item.label === "Work" && active === "work")
                   ? " active"
                   : ""
               }`}
@@ -101,7 +103,8 @@ export default function SiteHeader({
               <Link
                 className={
                   (item.label === "About" && active === "about") ||
-                  (item.label === "Remote Team" && active === "remote")
+                  (item.label === "Remote Team" && active === "remote") ||
+                  (item.label === "Work" && active === "work")
                     ? "active"
                     : ""
                 }

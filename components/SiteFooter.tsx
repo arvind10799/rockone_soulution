@@ -42,6 +42,7 @@ export default function SiteFooter() {
             <strong>Explore</strong>
             <Link href="/">Home</Link>
             <Link href="/services">Services</Link>
+            <Link href="/work/auto-parts-crm">Auto Parts CRM Case Study</Link>
             <Link href="/remote-tech-team">Remote Team</Link>
             <Link href="/about">About</Link>
             <Link href="/#blog">Blog</Link>

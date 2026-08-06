@@ -10,6 +10,7 @@ const animatedSelector = [
   ".insight-card",
   ".crm-module-card",
   ".contact-panel",
+  ".cs-reveal",
   ".site-footer"
 ].join(",");
 

@@ -1,19 +1,56 @@
 /* ============================================================================
    Auto Parts CRM — case study page
-   Editorial layout: dark hero, full-bleed product stages, generous rhythm.
+   Deep-navy editorial layout. The recreated CRM screens are the only bright
+   objects on the page, so they read as lit devices against the dark ground.
    ========================================================================== */
 
 .cs-main {
   --cs-gutter: max(24px, calc((100vw - 1240px) / 2));
   --cs-wide: max(20px, calc((100vw - 1500px) / 2));
-  --cs-ink: #0b1830;
-  --cs-slate: #566178;
-  background: #ffffff;
-  color: #0b1830;
-  overflow-x: hidden;
+
+  /* Dark token ladder — matches .about-cta / .site-footer elsewhere on the site. */
+  --cs-bg: #0b1220;
+  --cs-bg-lift: #12233c;
+  --cs-card: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.028));
+  --cs-card-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.045));
+  --cs-line: rgba(255, 255, 255, 0.1);
+  --cs-line-soft: rgba(255, 255, 255, 0.07);
+  --cs-heading: #ffffff;
+  --cs-body: rgba(255, 255, 255, 0.74);
+  --cs-muted: rgba(255, 255, 255, 0.5);
+  --cs-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.85);
+
+  position: relative;
+  background: var(--cs-bg);
+  color: var(--cs-body);
+  /* `clip`, not `hidden`: `overflow-x: hidden` makes this a scroll container,
+     which silently breaks `position: sticky` for the sequence stage inside.
+     It also must not gain transform/filter/perspective — either would trap
+     the fixed .cs-ambient layer. */
+  overflow-x: clip;
+}
+
+/* The global body background is light; without this, over-scroll rubber-banding
+   flashes white above and below the dark page. Scoped so no other route moves. */
+body:has(.cs-main) {
+  background: #0b1220;
+}
+
+/* The mobile tab bar is rendered by the root layout, outside this page's tree,
+   so it is reached the same way rather than by threading a prop through. */
+body:has(.cs-main) .mobile-tabbar {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(17, 27, 45, 0.88);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+}
+
+body:has(.cs-main) .mobile-tab {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .cs-main section {
+  position: relative;
+  z-index: 1;
   padding-inline: var(--cs-gutter);
 }
 
@@ -56,7 +93,7 @@
 
 .cs-head p {
   margin: 0;
-  color: #55637a;
+  color: var(--cs-muted);
   font-size: clamp(1rem, 1.2vw, 1.12rem);
   line-height: 1.7;
 }
@@ -82,10 +119,230 @@
   pointer-events: none;
 }
 
+/* ===========================================================================
+   .cs-ambient — the page-wide live background.
+
+   Fixed behind everything and scroll-persistent: drifting colour blobs, a
+   slowly panning dot mesh, and two light streaks. Transform/opacity only, so
+   it stays on the compositor. Adapted from the homepage `live-*` vocabulary
+   (globals.css) whose highlights are white additive light and therefore read
+   better on dark than they ever did on the light homepage.
+   ========================================================================= */
+
+.cs-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.cs-ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(74px);
+  opacity: 0.42;
+  will-change: transform;
+}
+
+.cs-ambient-blob:nth-of-type(1) {
+  width: 46vw;
+  height: 46vw;
+  left: -10vw;
+  top: -12vw;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.6), transparent 68%);
+  animation: cs-drift-a 22s ease-in-out infinite;
+}
+
+.cs-ambient-blob:nth-of-type(2) {
+  width: 38vw;
+  height: 38vw;
+  right: -8vw;
+  top: -4vw;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.55), transparent 68%);
+  animation: cs-drift-b 26s ease-in-out infinite;
+}
+
+.cs-ambient-blob:nth-of-type(3) {
+  width: 34vw;
+  height: 34vw;
+  right: 16vw;
+  bottom: -14vw;
+  background: radial-gradient(circle, rgba(243, 90, 43, 0.34), transparent 70%);
+  animation: cs-drift-c 30s ease-in-out infinite;
+}
+
+.cs-ambient-blob:nth-of-type(4) {
+  width: 30vw;
+  height: 30vw;
+  left: 12vw;
+  bottom: -10vw;
+  background: radial-gradient(circle, rgba(16, 168, 223, 0.34), transparent 70%);
+  animation: cs-drift-b 34s ease-in-out infinite reverse;
+}
+
+/* Dot grid — the homepage version uses rgba(28,95,184,.18) strokes that vanish
+   on navy, so this one is white at low alpha instead. */
+.cs-ambient-mesh {
+  position: absolute;
+  inset: -20%;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+    linear-gradient(115deg, transparent 46%, rgba(255, 255, 255, 0.035) 50%, transparent 54%);
+  background-size: 46px 46px, 100% 100%;
+  opacity: 0.5;
+  animation: cs-mesh-pan 26s linear infinite;
+}
+
+.cs-ambient-streak {
+  position: absolute;
+  height: 1px;
+  width: 60vw;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    rgba(16, 168, 223, 0.5),
+    rgba(243, 90, 43, 0.35),
+    transparent
+  );
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.cs-ambient-streak:nth-of-type(5) {
+  top: 26%;
+  left: -60vw;
+  animation: cs-streak 13s ease-in-out infinite;
+}
+
+.cs-ambient-streak:nth-of-type(6) {
+  top: 68%;
+  left: -60vw;
+  transform: rotate(-2deg);
+  animation: cs-streak 17s ease-in-out 5s infinite;
+}
+
+@keyframes cs-drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6vw, 5vh, 0) scale(1.12);
+  }
+}
+
+@keyframes cs-drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(-7vw, 6vh, 0) scale(0.92);
+  }
+}
+
+@keyframes cs-drift-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.95);
+  }
+  50% {
+    transform: translate3d(-5vw, -6vh, 0) scale(1.15);
+  }
+}
+
+@keyframes cs-mesh-pan {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(46px, 46px, 0);
+  }
+}
+
+@keyframes cs-streak {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  12% {
+    opacity: 0.85;
+  }
+  60% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(190vw, 0, 0);
+  }
+}
+
 .cs-hero-inner {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 22px;
   max-width: 1120px;
+}
+
+/* ------------------------------------------------- hero entrance sequence */
+
+.cs-crumbs,
+.cs-kicker,
+.cs-lede,
+.cs-meta > div {
+  opacity: 0;
+  animation: cs-rise-in 760ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cs-crumbs {
+  animation-delay: 60ms;
+}
+
+.cs-kicker {
+  animation-delay: 150ms;
+}
+
+.cs-lede {
+  animation-delay: 620ms;
+}
+
+.cs-meta > div {
+  animation-delay: calc(760ms + var(--meta-index, 0) * 70ms);
+}
+
+/* Each headline line rises out of its own mask. */
+.cs-hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.cs-hero-line > span {
+  display: block;
+  transform: translateY(105%);
+  animation: cs-line-in 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(260ms + var(--line, 0) * 110ms);
+}
+
+@keyframes cs-rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cs-line-in {
+  to {
+    transform: none;
+  }
 }
 
 .cs-crumbs {
@@ -133,12 +390,14 @@
 
 .cs-hero h1 {
   margin: 0;
-  max-width: 17ch;
+  /* Sized so each masked line stays on one row — a wrapped line would rise
+     out of the middle of the mask instead of from beneath it. */
+  max-width: 1010px;
   color: #ffffff;
-  font-size: clamp(2.4rem, 5.6vw, 4.6rem);
+  font-size: clamp(1.95rem, 4.2vw, 3.55rem);
   font-weight: 800;
   letter-spacing: -0.042em;
-  line-height: 1.02;
+  line-height: 1.06;
 }
 
 .cs-lede {
@@ -193,19 +452,169 @@
   margin: 0;
 }
 
-.cs-frame-hero {
-  box-shadow: 0 60px 130px -40px rgba(6, 14, 34, 0.75);
+/* ===========================================================================
+   Hero device — an open laptop, drawn in CSS.
+
+   The lid holds a 16:10 screen that is a *size* container, so the mock inside
+   can be sized off both width and height. Everything in the mock is `em` off
+   one root font-size, so fitting the whole dashboard is a font-size problem,
+   not a transform problem: `min()` takes whichever of width-fit, height-fit,
+   or the normal cap is smallest.
+
+   81 is the DashboardScreen's measured content height in `em` (80.76 at 1400px
+   / 13px root, plus a hair of slack). A smaller root font makes the container
+   wider in `em`, so text wraps less and the real height only drops — 81 is a
+   safe upper bound. 34px is .crm-frame-chrome's fixed height.
+   ========================================================================= */
+
+.cs-laptop {
+  /* Also bounded by height so the whole machine clears the fold:
+     screen height = width x 0.625, plus lid padding and base. */
+  width: min(1060px, 100%, calc((78vh - 46px) / 0.625));
+  margin: 0 auto;
+}
+
+.cs-laptop-lid {
+  position: relative;
+  padding: 14px 14px 0;
+  border-radius: 18px 18px 5px 5px;
+  background: linear-gradient(180deg, #39445a 0%, #232c3d 55%, #1a2130 100%);
+  box-shadow:
+    0 44px 100px -34px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+/* Camera dot in the top bezel. */
+.cs-laptop-lid::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateX(-50%);
+}
+
+.cs-laptop-screen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  container-type: size;
+  overflow: hidden;
+  border-radius: 7px 7px 0 0;
+  background: #05070d;
+}
+
+.cs-laptop-screen .cs-frame-hero {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.cs-laptop-screen .cm-app {
+  font-size: min(1.13cqw, calc((100cqh - 34px) / 81), 13px);
+}
+
+/* Soft diagonal reflection across the glass. */
+.cs-laptop-glare {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    122deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    rgba(255, 255, 255, 0.03) 26%,
+    transparent 52%
+  );
+  pointer-events: none;
+}
+
+.cs-laptop-base {
+  position: relative;
+  width: 114%;
+  height: 15px;
+  margin: 0 -7%;
+  border-radius: 0 0 13px 13px;
+  background: linear-gradient(180deg, #4c576e 0%, #2b3446 42%, #171d2a 100%);
+  box-shadow: 0 30px 44px -22px rgba(0, 0, 0, 0.9);
+}
+
+/* Thumb notch. */
+.cs-laptop-base::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 13%;
+  height: 6px;
+  border-radius: 0 0 7px 7px;
+  background: rgba(0, 0, 0, 0.42);
+  transform: translateX(-50%);
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll-linked device shots.
+
+   Progressive enhancement: browsers with scroll-driven animations tie the
+   device entrance and drift to scroll position. Everywhere else the frames
+   simply render at rest — nothing is hidden behind an unsupported feature.
+   --------------------------------------------------------------------------- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cs-showcase {
+      /* rotateX needs depth to read as a tilt rather than a squash. */
+      perspective: 1600px;
+    }
+
+    /* The whole laptop tilts in as one object, not just the screen. */
+    .cs-laptop,
+    .cs-frame-spotlight {
+      animation: cs-device-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 42%;
+      transform-origin: 50% 100%;
+    }
+
+    /* Slow drift while the frame crosses the viewport. */
+    .cs-seq-stage {
+      animation: cs-stage-drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@keyframes cs-device-in {
+  from {
+    opacity: 0;
+    transform: translateY(56px) scale(0.94) rotateX(7deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cs-stage-drift {
+  from {
+    transform: translateY(14px);
+  }
+  to {
+    transform: translateY(-14px);
+  }
 }
 
 .cs-caption em {
-  color: #93a1b5;
+  color: rgba(255, 255, 255, 0.38);
   font-style: normal;
 }
 
 .cs-caption {
   max-width: 640px;
   margin: 22px auto 0;
-  color: #6b7891;
+  color: var(--cs-muted);
   font-size: 0.92rem;
   line-height: 1.65;
   text-align: center;
@@ -228,7 +637,7 @@
 
 .cs-overview-copy p {
   margin: 0;
-  color: #4f5d75;
+  color: var(--cs-body);
   font-size: clamp(1rem, 1.15vw, 1.1rem);
   line-height: 1.8;
 }
@@ -247,10 +656,10 @@
   align-items: baseline;
   gap: 6px 18px;
   padding: 22px;
-  border: 1px solid #e8edf5;
+  border: 1px solid var(--cs-line);
   border-radius: 18px;
-  background: linear-gradient(180deg, #ffffff, #f8fbff);
-  box-shadow: 0 18px 44px -32px rgba(13, 30, 66, 0.5);
+  background: var(--cs-card);
+  box-shadow: var(--cs-shadow);
 }
 
 .cs-stats strong {
@@ -263,13 +672,13 @@
 }
 
 .cs-stats b {
-  color: #0b1830;
+  color: var(--cs-heading);
   font-size: 1rem;
   font-weight: 750;
 }
 
 .cs-stats span {
-  color: #6b7891;
+  color: var(--cs-muted);
   font-size: 0.88rem;
   line-height: 1.55;
 }
@@ -278,8 +687,8 @@
 
 .cs-problem {
   padding-block: clamp(52px, 7vw, 96px);
-  background: #f7f9fd;
-  border-block: 1px solid #eaeff7;
+  background: rgba(18, 35, 60, 0.55);
+  border-block: 1px solid var(--cs-line-soft);
 }
 
 .cs-problem-grid {
@@ -293,15 +702,21 @@
   gap: 12px;
   align-content: start;
   padding: 28px 26px;
-  border: 1px solid #e6ecf5;
+  border: 1px solid var(--cs-line);
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--cs-card);
+  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+
+.cs-problem-grid article[data-reveal].is-visible {
+  /* Re-assert a short transition so hover does not inherit the 720ms reveal. */
   transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
 .cs-problem-grid article:hover {
   transform: translateY(-4px);
-  box-shadow: 0 26px 54px -34px rgba(13, 30, 66, 0.6);
+  background: var(--cs-card-hover);
+  box-shadow: var(--cs-shadow);
 }
 
 .cs-problem-num {
@@ -312,19 +727,18 @@
 }
 
 .cs-problem-grid h3,
-.cs-module-grid h3,
 .cs-role-grid h3 {
   margin: 0;
+  color: var(--cs-heading);
   font-size: 1.16rem;
   font-weight: 750;
   letter-spacing: -0.02em;
 }
 
 .cs-problem-grid p,
-.cs-module-grid p,
 .cs-role-grid p {
   margin: 0;
-  color: #5b6880;
+  color: var(--cs-body);
   font-size: 0.95rem;
   line-height: 1.7;
 }
@@ -351,9 +765,9 @@
   gap: 10px;
   align-content: start;
   padding: 24px 22px;
-  border: 1px solid #e6ecf5;
+  border: 1px solid var(--cs-line);
   border-radius: 18px;
-  background: linear-gradient(180deg, #ffffff, #fafcff);
+  background: var(--cs-card);
 }
 
 @media (min-width: 1000px) {
@@ -373,9 +787,17 @@
   right: -13px;
   width: 8px;
   height: 8px;
-  border-top: 2px solid #cdd9e9;
-  border-right: 2px solid #cdd9e9;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+  border-right: 2px solid rgba(255, 255, 255, 0.3);
   transform: rotate(45deg);
+  /* Chevrons appear only once their step has landed. */
+  opacity: 0;
+  transition: opacity 340ms ease;
+  transition-delay: calc(var(--reveal-index, 0) * 80ms + 260ms);
+}
+
+.cs-flow-track li.is-visible::after {
+  opacity: 1;
 }
 
 .cs-flow-track li:last-child::after {
@@ -388,165 +810,197 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: linear-gradient(180deg, #eaf1fe, #dfe9fd);
-  color: var(--blue);
+  background: rgba(37, 99, 235, 0.2);
+  color: #93b4ff;
   font-size: 0.8rem;
   font-weight: 800;
 }
 
 .cs-flow-track h3 {
   margin: 0;
+  color: var(--cs-heading);
   font-size: 1.02rem;
   font-weight: 750;
 }
 
 .cs-flow-track p {
   margin: 0;
-  color: #5b6880;
+  color: var(--cs-body);
   font-size: 0.9rem;
   line-height: 1.6;
 }
 
 /* --------------------------------------------------------- product tour */
 
-.cs-tour-section {
-  padding-block: clamp(52px, 7vw, 96px);
+/* ============================================================ the sequence
+   A sticky device stage beside six scrolling chapters. Pinning is pure CSS;
+   CrmScrollSequence only decides which screen is active.
+   ========================================================================= */
+
+.cs-seq-section {
+  padding-block: clamp(52px, 7vw, 96px) clamp(60px, 8vw, 110px);
   padding-inline: var(--cs-wide) !important;
   background:
-    radial-gradient(50% 60% at 20% 0%, rgba(37, 99, 235, 0.07), transparent 65%),
-    #f5f8fd;
-  border-block: 1px solid #eaeff7;
+    radial-gradient(50% 60% at 20% 0%, rgba(37, 99, 235, 0.14), transparent 65%),
+    rgba(18, 35, 60, 0.5);
+  border-block: 1px solid var(--cs-line-soft);
 }
 
-.cs-tour-section .cs-head,
-.cs-tour-tabs,
-.cs-tour-copy {
+.cs-seq-section .cs-head {
   padding-inline: max(0px, calc(var(--cs-gutter) - var(--cs-wide)));
 }
 
-.cs-tour {
+.cs-seq {
   display: grid;
-  gap: 22px;
+  grid-template-columns: minmax(0, 1.32fr) minmax(300px, 0.68fr);
+  gap: clamp(24px, 3vw, 56px);
+  /* Deliberately NOT `align-items: start` — the stage column has to stretch to
+     the full height of the chapter list, or `sticky` has nowhere to travel. */
 }
 
-.cs-tour-tabs {
+.cs-seq-stage-col {
+  position: relative;
+}
+
+.cs-seq-stage {
+  position: sticky;
+  top: clamp(88px, 11vh, 120px);
+  display: grid;
+  gap: 14px;
+}
+
+.cs-seq-frames {
+  position: relative;
+  /* All six screens stack here; the active one fades to the front. */
+  display: grid;
+  /* Crop like a screenshot rather than overflowing the viewport. */
+  max-height: calc(100vh - 230px);
+  overflow: hidden;
+  border-radius: clamp(10px, 1.2vw, 18px);
+}
+
+.cs-seq-frame {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: scale(0.975) translateY(14px);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.cs-seq-frame.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.cs-seq-legend {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-inline: 4px;
 }
 
-.cs-tour-tab {
+.cs-seq-stage-label {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 11px 20px;
-  border: 1px solid #dfe7f2;
+  margin: 0;
+  color: var(--cs-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.cs-seq-stage-label span {
+  color: #7fa6ff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.cs-seq-ticks {
+  display: flex;
+  gap: 6px;
+}
+
+.cs-seq-ticks span {
+  width: 22px;
+  height: 3px;
   border-radius: 999px;
-  background: #ffffff;
-  color: #45536b;
-  font-family: inherit;
-  font-size: 0.94rem;
-  font-weight: 650;
-  cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  background: rgba(255, 255, 255, 0.22);
+  transition: background 320ms ease, width 320ms ease;
 }
 
-.cs-tour-tab span {
-  color: #9fb0c6;
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+.cs-seq-ticks span.is-active {
+  width: 34px;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
 }
 
-.cs-tour-tab:hover {
-  transform: translateY(-2px);
-  border-color: #bed2ec;
-}
-
-.cs-tour-tab.is-active {
-  border-color: transparent;
-  background: var(--black);
-  color: #ffffff;
-  box-shadow: 0 16px 32px -18px rgba(5, 7, 13, 0.8);
-}
-
-.cs-tour-tab.is-active span {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.cs-tour-copy {
+.cs-seq-chapters {
   display: grid;
-  gap: 8px;
-  max-width: 900px;
-  animation: csFade 420ms ease both;
-}
-
-.cs-tour-copy h3 {
   margin: 0;
-  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  padding: 0;
+  list-style: none;
+}
+
+.cs-seq-chapter {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  /* Each chapter fills roughly a screen so the stage holds while it is read. */
+  min-height: min(78vh, 640px);
+  padding-block: clamp(28px, 5vh, 56px);
+  opacity: 0.32;
+  transition: opacity 420ms ease;
+}
+
+.cs-seq-chapter.is-active {
+  opacity: 1;
+}
+
+.cs-seq-num {
+  color: #7fa6ff;
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.14em;
 }
 
-.cs-tour-copy p {
-  margin: 0;
-  color: #5b6880;
-  font-size: 1rem;
-  line-height: 1.7;
-}
-
-@keyframes csFade {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
-/* ------------------------------------------------------------- modules */
-
-.cs-modules {
-  padding-block: clamp(52px, 7vw, 96px);
-}
-
-.cs-module-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  gap: 20px;
-}
-
-@media (min-width: 1000px) {
-  .cs-module-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.cs-module-grid article {
-  display: grid;
-  gap: 12px;
-  align-content: start;
-  padding: 30px 28px;
-  border: 1px solid #e6ecf5;
-  border-radius: 22px;
-  background: #ffffff;
-  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-}
-
-.cs-module-grid article:hover {
-  transform: translateY(-5px);
-  border-color: #d5e2f3;
-  box-shadow: 0 30px 60px -38px rgba(13, 30, 66, 0.65);
-}
-
-.cs-tag {
+.cs-seq-module {
   width: max-content;
   padding: 6px 14px;
   border-radius: 999px;
-  background: #eef3fb;
-  color: var(--blue);
+  background: rgba(37, 99, 235, 0.22);
+  color: #93b4ff;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.cs-seq-chapter h3 {
+  margin: 4px 0 0;
+  color: var(--cs-heading);
+  font-size: clamp(1.35rem, 2.3vw, 1.95rem);
+  font-weight: 800;
+  letter-spacing: -0.028em;
+  line-height: 1.16;
+}
+
+.cs-seq-chapter p {
+  margin: 0;
+  color: var(--cs-body);
+  font-size: 1.02rem;
+  line-height: 1.72;
+}
+
+.cs-seq-protects {
+  margin-top: 6px !important;
+  padding-left: 18px;
+  border-left: 2px solid var(--cs-line);
+  color: var(--cs-muted) !important;
+  font-size: 0.95rem !important;
 }
 
 /* ------------------------------------------------------------ spotlight */
@@ -623,6 +1077,7 @@
 
 .cs-system h3 {
   margin: 0 0 20px;
+  color: var(--cs-heading);
   font-size: 1.24rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -641,9 +1096,9 @@
   align-items: center;
   gap: 16px;
   padding: 14px 16px;
-  border: 1px solid #e8edf5;
+  border: 1px solid var(--cs-line);
   border-radius: 16px;
-  background: #ffffff;
+  background: var(--cs-card);
 }
 
 .cs-swatch {
@@ -651,17 +1106,18 @@
   height: 44px;
   flex: none;
   border-radius: 12px;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
 .cs-palette b {
   display: block;
+  color: var(--cs-heading);
   font-size: 0.98rem;
   font-weight: 750;
 }
 
 .cs-palette code {
-  color: #7b8798;
+  color: rgba(255, 255, 255, 0.42);
   font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -670,7 +1126,7 @@
 .cs-palette small {
   display: block;
   margin-top: 2px;
-  color: #6b7891;
+  color: var(--cs-muted);
   font-size: 0.85rem;
 }
 
@@ -681,15 +1137,16 @@
 
 .cs-principles article {
   padding: 24px 0;
-  border-top: 1px solid #e8edf5;
+  border-top: 1px solid var(--cs-line-soft);
 }
 
 .cs-principles article:last-child {
-  border-bottom: 1px solid #e8edf5;
+  border-bottom: 1px solid var(--cs-line-soft);
 }
 
 .cs-principles h4 {
   margin: 0 0 8px;
+  color: var(--cs-heading);
   font-size: 1.08rem;
   font-weight: 750;
   letter-spacing: -0.015em;
@@ -697,7 +1154,7 @@
 
 .cs-principles p {
   margin: 0;
-  color: #5b6880;
+  color: var(--cs-body);
   font-size: 0.96rem;
   line-height: 1.72;
 }
@@ -706,8 +1163,8 @@
 
 .cs-roles {
   padding-block: clamp(52px, 7vw, 96px);
-  background: #f7f9fd;
-  border-block: 1px solid #eaeff7;
+  background: rgba(18, 35, 60, 0.55);
+  border-block: 1px solid var(--cs-line-soft);
 }
 
 .cs-role-grid {
@@ -721,9 +1178,9 @@
   gap: 14px;
   align-content: start;
   padding: 30px 28px;
-  border: 1px solid #e6ecf5;
+  border: 1px solid var(--cs-line);
   border-radius: 22px;
-  background: #ffffff;
+  background: var(--cs-card);
 }
 
 .cs-role-grid h3 {
@@ -741,7 +1198,7 @@
 .cs-role-grid li {
   position: relative;
   padding-left: 22px;
-  color: #45536b;
+  color: var(--cs-body);
   font-size: 0.93rem;
 }
 
@@ -770,6 +1227,7 @@
 
 .cs-quote p {
   margin: 0 0 22px;
+  color: var(--cs-heading);
   font-size: clamp(1.5rem, 3.1vw, 2.5rem);
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -777,7 +1235,7 @@
 }
 
 .cs-quote cite {
-  color: #7b8798;
+  color: var(--cs-muted);
   font-size: 0.86rem;
   font-style: normal;
   font-weight: 700;
@@ -789,7 +1247,7 @@
 
 .cs-results {
   padding-block: clamp(52px, 7vw, 96px);
-  border-top: 1px solid #eaeff7;
+  border-top: 1px solid var(--cs-line-soft);
 }
 
 .cs-outcome-list {
@@ -806,8 +1264,8 @@
   gap: 14px;
   align-items: flex-start;
   padding: 18px 0;
-  border-bottom: 1px solid #eef2f8;
-  color: #3d4a60;
+  border-bottom: 1px solid var(--cs-line-soft);
+  color: var(--cs-body);
   font-size: 1rem;
   line-height: 1.65;
 }
@@ -820,8 +1278,8 @@
   flex: none;
   margin-top: 2px;
   border-radius: 999px;
-  background: #e6f7ef;
-  color: #0f7a4d;
+  background: rgba(74, 222, 128, 0.16);
+  color: #4ade80;
 }
 
 .cs-outcome-list svg {
@@ -843,10 +1301,10 @@
 
 .cs-stack span:not(.cs-section-kicker) {
   padding: 9px 18px;
-  border: 1px solid #e2e9f3;
+  border: 1px solid var(--cs-line);
   border-radius: 999px;
-  background: #ffffff;
-  color: #45536b;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cs-body);
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -896,30 +1354,39 @@
   color: #ffffff;
 }
 
-/* --------------------------------------------------------------- reveal */
-
-.motion-ready .cs-reveal {
-  opacity: 0;
-  transform: translate3d(0, 34px, 0);
-  transition:
-    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.motion-ready .cs-reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
+/* ------------------------------------------------------- reduced motion */
 
 @media (prefers-reduced-motion: reduce) {
-  .motion-ready .cs-reveal {
+  /* Nothing on this page may depend on motion to become readable. */
+  .cs-crumbs,
+  .cs-kicker,
+  .cs-lede,
+  .cs-meta > div,
+  .cs-hero-line > span {
     opacity: 1;
     transform: none;
+    animation: none;
+  }
+
+  /* The ambient layer keeps its colour but stops moving entirely. */
+  .cs-ambient-blob,
+  .cs-ambient-mesh,
+  .cs-ambient-streak {
+    animation: none;
+  }
+
+  .cs-ambient-streak {
+    opacity: 0.3;
+  }
+
+  .cs-seq-frame,
+  .cs-seq-chapter,
+  .cs-flow-track li::after {
     transition: none;
   }
 
-  .cs-tour-copy {
-    animation: none;
+  .cs-seq-chapter {
+    opacity: 1;
   }
 }
 
@@ -942,7 +1409,49 @@
   }
 }
 
+/* Below 900px the stage moves above the chapters but stays sticky, so the
+   device is still visible while its chapter is being read. */
+@media (max-width: 900px) {
+  .cs-seq {
+    display: block;
+  }
+
+  /* `display: contents` drops the wrapper so the sticky stage's containing
+     block becomes .cs-seq — stacked in one column the wrapper is only as tall
+     as the stage itself, which would leave sticky nowhere to travel. */
+  .cs-seq-stage-col {
+    display: contents;
+  }
+
+  .cs-seq-stage {
+    /* Clears the sticky site header, which is 78px at this breakpoint. */
+    top: 78px;
+    z-index: 2;
+    /* Fully opaque: chapters scroll underneath the pinned stage, so a partial
+       fade would let their text show through the device and legend. */
+    padding-block: 14px 12px;
+    background: var(--cs-bg);
+    box-shadow: 0 14px 18px -14px rgba(0, 0, 0, 0.8);
+  }
+
+  .cs-seq-frames {
+    /* Leave room for the chapter copy under the device. */
+    max-height: 44vh;
+  }
+
+  .cs-seq-chapter {
+    min-height: 0;
+    padding-block: clamp(20px, 5vh, 40px);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 760px) {
+  /* Header shrinks again at this breakpoint. */
+  .cs-seq-stage {
+    top: 70px;
+  }
+
   .cs-showcase {
     margin-top: clamp(-120px, -22vw, -70px);
   }
@@ -953,11 +1462,6 @@
 
   .cs-flow-track li::after {
     display: none;
-  }
-
-  .cs-tour-tab {
-    padding: 9px 15px;
-    font-size: 0.86rem;
   }
 
   .cs-quote blockquote {

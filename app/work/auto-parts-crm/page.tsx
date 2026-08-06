@@ -3,7 +3,7 @@ import Link from "next/link";
 import ScrollAnimator from "@/components/ScrollAnimator";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
-import CrmProductTour from "@/components/CrmProductTour";
+import CrmScrollSequence from "@/components/CrmScrollSequence";
 import { DashboardScreen, OrderDetailScreen } from "@/components/CrmMockScreens";
 import "./crm-mock.css";
 import "./case-study.css";
@@ -19,6 +19,13 @@ const arrow = (
     <path d="M5 12h14M13 6l6 6-6 6" />
   </svg>
 );
+
+/* Split into lines so each can rise out of its own mask. */
+const heroHeadline = [
+  "One workspace that carries an",
+  "auto-parts lead from first call",
+  "to signed invoice."
+];
 
 const meta = [
   { label: "Client", value: "Intracia Technologies" },
@@ -72,44 +79,8 @@ const flow = [
   { step: "08", title: "Reported", body: "Revenue, conversion, and pipeline health roll up to the dashboard." }
 ];
 
-const modules = [
-  {
-    tag: "Leads",
-    title: "A pipeline with honest statuses",
-    body:
-      "Prospect, quoted, call back later, shopping around, needs locally, and we don't sell. Losses are recorded with a reason so the pipeline reflects reality instead of optimism."
-  },
-  {
-    tag: "Orders",
-    title: "One record, full context",
-    body:
-      "Order number, adviser, customer, vehicle, VIN, variant, pricing, billing, and shipping live together — searchable by order number, customer, email, or part."
-  },
-  {
-    tag: "Invoicing",
-    title: "Generate, send, sign, re-issue",
-    body:
-      "The invoice panel exposes every action a sales admin actually needs: view, download PDF, edit, resend the signature request, and mint a fresh signing link."
-  },
-  {
-    tag: "Shipments",
-    title: "Exceptions before inventory",
-    body:
-      "The shipment view counts in-transit and delayed loads separately, so the team opens the day on the shipments that are slipping, not the ones that are fine."
-  },
-  {
-    tag: "Audit",
-    title: "Notes that double as history",
-    body:
-      "Every invoice event, edit, and manual note writes to one timeline against the order, with author and timestamp. Disputes get answered from the record."
-  },
-  {
-    tag: "Access",
-    title: "Roles created in seconds",
-    body:
-      "Admins create sales agents and shipping accounts from the User Center, with status control — no developer involvement to onboard or revoke a user."
-  }
-];
+/* The per-module "what it protects" copy now lives beside its screen in
+   components/CrmMockScreens.tsx, so the scroll sequence renders both together. */
 
 const roles = [
   {
@@ -176,9 +147,20 @@ export default function AutoPartsCrmCaseStudy() {
   return (
     <>
       <ScrollAnimator />
-      <SiteHeader active="work" />
+      <SiteHeader active="work" tone="dark" />
 
       <main className="cs-main">
+        {/* Fixed live background: drifting glow, panning mesh, light streaks. */}
+        <div className="cs-ambient" aria-hidden="true">
+          <span className="cs-ambient-blob" />
+          <span className="cs-ambient-blob" />
+          <span className="cs-ambient-blob" />
+          <span className="cs-ambient-blob" />
+          <span className="cs-ambient-streak" />
+          <span className="cs-ambient-streak" />
+          <span className="cs-ambient-mesh" />
+        </div>
+
         <section className="cs-hero">
           <div className="cs-hero-inner">
             <nav className="cs-crumbs" aria-label="Breadcrumb">
@@ -190,10 +172,17 @@ export default function AutoPartsCrmCaseStudy() {
             </nav>
 
             <span className="cs-kicker">Case study</span>
-            <h1>
-              One workspace that carries an auto-parts lead all the way to a signed
-              invoice and a tracked delivery.
+
+            {/* Each line is masked by its own overflow container so the text
+                rises out of nothing rather than fading in place. */}
+            <h1 aria-label={heroHeadline.join(" ")}>
+              {heroHeadline.map((line, index) => (
+                <span className="cs-hero-line" key={line} aria-hidden="true">
+                  <span style={{ ["--line" as string]: `${index}` }}>{line}</span>
+                </span>
+              ))}
             </h1>
+
             <p className="cs-lede">
               Intracia Technologies runs MEE Auto Parts, a US aftermarket parts operation
               where a single sale touches quoting, order entry, invoicing, e-signature,
@@ -202,8 +191,8 @@ export default function AutoPartsCrmCaseStudy() {
             </p>
 
             <dl className="cs-meta">
-              {meta.map((item) => (
-                <div key={item.label}>
+              {meta.map((item, index) => (
+                <div key={item.label} style={{ ["--meta-index" as string]: `${index}` }}>
                   <dt>{item.label}</dt>
                   <dd>{item.value}</dd>
                 </div>
@@ -213,23 +202,33 @@ export default function AutoPartsCrmCaseStudy() {
         </section>
 
         <section className="cs-showcase" aria-label="Auto Parts CRM sales dashboard">
-          <figure className="crm-frame cs-frame cs-frame-hero">
-            <div className="crm-frame-chrome" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-              <span>crm.meeautoparts.com/dashboard</span>
+          {/* Open-laptop shell. The screen is a 16:10 size container, so the
+              mock inside scales to fill it exactly — see case-study.css. */}
+          <div className="cs-laptop">
+            <div className="cs-laptop-lid">
+              <div className="cs-laptop-screen">
+                <figure className="crm-frame cs-frame cs-frame-hero">
+                  <div className="crm-frame-chrome" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                    <span>crm.meeautoparts.com/dashboard</span>
+                  </div>
+                  <DashboardScreen />
+                </figure>
+                <span className="cs-laptop-glare" aria-hidden="true" />
+              </div>
             </div>
-            <DashboardScreen />
-          </figure>
+            <div className="cs-laptop-base" aria-hidden="true" />
+          </div>
           <figcaption className="cs-caption">
             The sales command center — pipeline, follow-ups, shipment alerts, and revenue
             in one scroll-free view. <em>All customer records shown are sample data.</em>
           </figcaption>
         </section>
 
-        <section className="cs-overview cs-reveal">
-          <div className="cs-overview-copy">
+        <section className="cs-overview">
+          <div className="cs-overview-copy" data-reveal="left">
             <span className="cs-section-kicker">The brief</span>
             <h2>Replace six tools with one operating system for the business.</h2>
             <p>
@@ -247,7 +246,7 @@ export default function AutoPartsCrmCaseStudy() {
           </div>
           <ul className="cs-stats">
             {stats.map((stat) => (
-              <li key={stat.label}>
+              <li key={stat.label} data-reveal="right">
                 <strong>{stat.value}</strong>
                 <b>{stat.label}</b>
                 <span>{stat.note}</span>
@@ -256,14 +255,14 @@ export default function AutoPartsCrmCaseStudy() {
           </ul>
         </section>
 
-        <section className="cs-problem cs-reveal">
-          <div className="cs-head">
+        <section className="cs-problem">
+          <div className="cs-head" data-reveal="up">
             <span className="cs-section-kicker">The challenge</span>
             <h2>Four places where a sale quietly leaked.</h2>
           </div>
           <div className="cs-problem-grid">
             {problems.map((problem, index) => (
-              <article key={problem.title}>
+              <article key={problem.title} data-reveal="scale">
                 <span className="cs-problem-num">{String(index + 1).padStart(2, "0")}</span>
                 <h3>{problem.title}</h3>
                 <p>{problem.body}</p>
@@ -272,8 +271,8 @@ export default function AutoPartsCrmCaseStudy() {
           </div>
         </section>
 
-        <section className="cs-flow cs-reveal">
-          <div className="cs-head">
+        <section className="cs-flow">
+          <div className="cs-head" data-reveal="up">
             <span className="cs-section-kicker">The approach</span>
             <h2>We designed the workflow first, then the screens.</h2>
             <p>
@@ -283,7 +282,7 @@ export default function AutoPartsCrmCaseStudy() {
           </div>
           <ol className="cs-flow-track">
             {flow.map((item) => (
-              <li key={item.step}>
+              <li key={item.step} data-reveal="up">
                 <span className="cs-flow-step">{item.step}</span>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
@@ -292,36 +291,20 @@ export default function AutoPartsCrmCaseStudy() {
           </ol>
         </section>
 
-        <section className="cs-tour-section cs-reveal">
-          <div className="cs-head">
+        <section className="cs-seq-section" aria-labelledby="cs-seq-title">
+          <div className="cs-head" data-reveal="up">
             <span className="cs-section-kicker">Product tour</span>
-            <h2>Six screens that do the whole job.</h2>
+            <h2 id="cs-seq-title">Six screens that do the whole job.</h2>
             <p>
               Every interface below is the shipped design, populated with sample records.
-              Step through the workflow the way the team does.
+              Keep scrolling to step through the workflow the way the team does.
             </p>
           </div>
-          <CrmProductTour />
+          <CrmScrollSequence />
         </section>
 
-        <section className="cs-modules cs-reveal">
-          <div className="cs-head">
-            <span className="cs-section-kicker">Inside the build</span>
-            <h2>What each module was designed to protect.</h2>
-          </div>
-          <div className="cs-module-grid">
-            {modules.map((module) => (
-              <article key={module.tag}>
-                <span className="cs-tag">{module.tag}</span>
-                <h3>{module.title}</h3>
-                <p>{module.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="cs-spotlight cs-reveal">
-          <div className="cs-spotlight-copy">
+        <section className="cs-spotlight">
+          <div className="cs-spotlight-copy" data-reveal="left">
             <span className="cs-section-kicker">Spotlight</span>
             <h2>The invoice screen that ended the chasing.</h2>
             <p>
@@ -351,14 +334,14 @@ export default function AutoPartsCrmCaseStudy() {
           </figure>
         </section>
 
-        <section className="cs-system cs-reveal">
-          <div className="cs-head">
+        <section className="cs-system">
+          <div className="cs-head" data-reveal="up">
             <span className="cs-section-kicker">Design system</span>
             <h2>A visual language built for eight-hour shifts.</h2>
           </div>
 
           <div className="cs-system-grid">
-            <div className="cs-palette">
+            <div className="cs-palette" data-reveal="left">
               <h3>Palette</h3>
               <ul>
                 {palette.map((swatch) => (
@@ -374,7 +357,7 @@ export default function AutoPartsCrmCaseStudy() {
               </ul>
             </div>
 
-            <div className="cs-principles">
+            <div className="cs-principles" data-reveal="right">
               <h3>Interface principles</h3>
               {principles.map((principle) => (
                 <article key={principle.title}>
@@ -386,14 +369,14 @@ export default function AutoPartsCrmCaseStudy() {
           </div>
         </section>
 
-        <section className="cs-roles cs-reveal">
-          <div className="cs-head">
+        <section className="cs-roles">
+          <div className="cs-head" data-reveal="up">
             <span className="cs-section-kicker">Access model</span>
             <h2>Three roles, three different applications.</h2>
           </div>
           <div className="cs-role-grid">
             {roles.map((role) => (
-              <article key={role.name}>
+              <article key={role.name} data-reveal="scale">
                 <h3>{role.name}</h3>
                 <p>{role.body}</p>
                 <ul>
@@ -406,8 +389,8 @@ export default function AutoPartsCrmCaseStudy() {
           </div>
         </section>
 
-        <section className="cs-quote cs-reveal">
-          <blockquote>
+        <section className="cs-quote">
+          <blockquote data-reveal="settle">
             <p>
               The measure of a CRM is not how much it can store. It is whether the person on
               the phone can see the next action without opening a second tab.
@@ -416,14 +399,14 @@ export default function AutoPartsCrmCaseStudy() {
           </blockquote>
         </section>
 
-        <section className="cs-results cs-reveal">
-          <div className="cs-head">
+        <section className="cs-results">
+          <div className="cs-head" data-reveal="up">
             <span className="cs-section-kicker">The outcome</span>
             <h2>What the team got.</h2>
           </div>
           <ul className="cs-outcome-list">
             {outcomes.map((outcome) => (
-              <li key={outcome}>
+              <li key={outcome} data-reveal="up">
                 <span aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12.5l4 4 10-10" />
@@ -433,7 +416,7 @@ export default function AutoPartsCrmCaseStudy() {
               </li>
             ))}
           </ul>
-          <div className="cs-stack">
+          <div className="cs-stack" data-reveal="up">
             <span className="cs-section-kicker">Built with</span>
             <div>
               {stack.map((item) => (
@@ -443,7 +426,7 @@ export default function AutoPartsCrmCaseStudy() {
           </div>
         </section>
 
-        <section className="cs-cta cs-reveal">
+        <section className="cs-cta" data-reveal="scale">
           <div>
             <span className="cs-section-kicker">Next</span>
             <h2>Have a workflow that lives in six tools?</h2>
@@ -453,7 +436,7 @@ export default function AutoPartsCrmCaseStudy() {
             </p>
           </div>
           <div className="cs-cta-actions">
-            <Link href="/#contact" className="about-btn-primary">
+            <Link href="/contact" className="about-btn-primary">
               Start a project {arrow}
             </Link>
             <Link href="/services/crm-systems" className="about-btn-ghost">

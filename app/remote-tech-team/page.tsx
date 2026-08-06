@@ -174,7 +174,7 @@ export default function RemoteTechTeamPage() {
               even when one urgent task needs the full shift.
             </p>
             <div className="remote-hero-actions">
-              <Link href="/#contact" className="about-btn-primary">
+              <Link href="/contact" className="about-btn-primary">
                 Book a free consultation {arrow}
               </Link>
               <a href="tel:+918197731627" className="about-btn-ghost">
@@ -364,7 +364,7 @@ export default function RemoteTechTeamPage() {
               arrangement that fits your workload.
             </p>
             <div className="about-cta-actions">
-              <Link href="/#contact" className="about-btn-primary">
+              <Link href="/contact" className="about-btn-primary">
                 Discuss your workload {arrow}
               </Link>
               <a href="tel:+918197731627" className="about-btn-ghost about-btn-ghost-dark">

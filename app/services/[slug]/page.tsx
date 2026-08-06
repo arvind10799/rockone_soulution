@@ -6,8 +6,10 @@ import SiteHeader from "@/components/SiteHeader";
 import {
   allServices,
   getServiceBySlug,
+  nextSteps,
   processSteps,
-  relatedServices
+  relatedServices,
+  serviceDetailFaqs
 } from "../services-data";
 import "../services.css";
 
@@ -52,6 +54,7 @@ export default async function ServiceDetailPage({
 
   const { service, category } = entry;
   const related = relatedServices(service.slug, category);
+  const faqs = service.faqs ?? serviceDetailFaqs;
 
   return (
     <>
@@ -75,7 +78,7 @@ export default async function ServiceDetailPage({
             <p className="service-tagline">{service.tagline}</p>
             <p className="service-summary">{service.summary}</p>
             <div className="service-hero-actions">
-              <Link href="/#contact" className="about-btn-primary">
+              <Link href="/contact" className="about-btn-primary">
                 Start a Project {arrow}
               </Link>
               <Link href="/services" className="about-btn-ghost">
@@ -126,6 +129,69 @@ export default async function ServiceDetailPage({
           </div>
         </section>
 
+        <section className="service-next" aria-labelledby="service-next-title">
+          <div className="about-section-head">
+            <span className="section-kicker about-kicker">Want more detail?</span>
+            <h2 id="service-next-title">
+              Here is exactly how to get {service.title.toLowerCase()} scoped and priced.
+            </h2>
+          </div>
+
+          <div className="service-next-grid">
+            <ol className="service-next-steps">
+              {nextSteps.map((step) => (
+                <li key={step.step}>
+                  <span className="service-next-num">{step.step}</span>
+                  <div>
+                    <h3>{step.title}</h3>
+                    <p>{step.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <aside className="service-next-card">
+              <h3>Talk to someone who has built it</h3>
+              <p>
+                Ask about timelines, budget ranges, or whether {service.title} is even the
+                right fit — we will tell you if it is not.
+              </p>
+              <div className="service-next-contacts">
+                <a href="tel:+918197731627">
+                  <span>Call</span>
+                  <strong>+91 8197731627</strong>
+                </a>
+                <a href="mailto:Info@rockonesolutions.com">
+                  <span>Email</span>
+                  <strong>Info@rockonesolutions.com</strong>
+                </a>
+                <div>
+                  <span>Typical reply</span>
+                  <strong>Within one working day</strong>
+                </div>
+              </div>
+              <Link href="/contact" className="about-btn-primary">
+                Request a proposal {arrow}
+              </Link>
+            </aside>
+          </div>
+
+          <div className="service-next-faq">
+            <h3>Common questions</h3>
+            <div className="about-faq-list">
+              {faqs.map((faq) => (
+                <details className="about-faq-item" key={faq.q}>
+                  <summary>
+                    {faq.q}
+                    <span className="about-faq-mark" aria-hidden="true" />
+                  </summary>
+                  <p>{faq.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {related.length > 0 && (
           <section
             className="service-related"
@@ -162,7 +228,7 @@ export default async function ServiceDetailPage({
               timeline — no pressure, just a useful conversation.
             </p>
             <div className="about-cta-actions">
-              <Link href="/#contact" className="about-btn-primary">
+              <Link href="/contact" className="about-btn-primary">
                 Start a Project {arrow}
               </Link>
               <a href="tel:+918197731627" className="about-btn-ghost about-btn-ghost-dark">

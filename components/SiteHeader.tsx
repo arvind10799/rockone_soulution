@@ -1,11 +1,20 @@
 import Link from "next/link";
 
-const navItems = [
-  { label: "Work", href: "/work/auto-parts-crm" },
-  { label: "Remote Team", href: "/remote-tech-team" },
-  { label: "Blog", href: "/#blog" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/#contact" }
+type NavKey =
+  | "home"
+  | "about"
+  | "services"
+  | "remote"
+  | "work"
+  | "blog"
+  | "contact";
+
+const navItems: { label: string; href: string; key: NavKey }[] = [
+  { label: "Work", href: "/work/auto-parts-crm", key: "work" },
+  { label: "Remote Team", href: "/remote-tech-team", key: "remote" },
+  { label: "Blog", href: "/blog", key: "blog" },
+  { label: "About", href: "/about", key: "about" },
+  { label: "Contact", href: "/contact", key: "contact" }
 ];
 
 const services = [
@@ -18,12 +27,15 @@ const services = [
 ];
 
 export default function SiteHeader({
-  active
+  active,
+  /** `dark` inverts the header for pages with a dark ground (the case study). */
+  tone = "light"
 }: {
-  active?: "home" | "about" | "services" | "remote" | "work";
+  active?: NavKey;
+  tone?: "light" | "dark";
 }) {
   return (
-    <header className="site-header">
+    <header className={`site-header${tone === "dark" ? " is-dark" : ""}`}>
       <div className="header-inner">
         <Link href="/" className="brand" aria-label="Rock One Solutions home">
           <span className="brand-mark" aria-hidden="true">
@@ -57,13 +69,7 @@ export default function SiteHeader({
           </div>
           {navItems.map((item) => (
             <Link
-              className={`nav-link${
-                (item.label === "About" && active === "about") ||
-                (item.label === "Remote Team" && active === "remote") ||
-                (item.label === "Work" && active === "work")
-                  ? " active"
-                  : ""
-              }`}
+              className={`nav-link${active === item.key ? " active" : ""}`}
               href={item.href}
               key={item.label}
             >
@@ -72,7 +78,7 @@ export default function SiteHeader({
           ))}
         </nav>
 
-        <Link className="header-cta" href="/#contact">
+        <Link className="header-cta" href="/contact">
           Start a Project
         </Link>
 
@@ -101,20 +107,14 @@ export default function SiteHeader({
             </details>
             {navItems.map((item) => (
               <Link
-                className={
-                  (item.label === "About" && active === "about") ||
-                  (item.label === "Remote Team" && active === "remote") ||
-                  (item.label === "Work" && active === "work")
-                    ? "active"
-                    : ""
-                }
+                className={active === item.key ? "active" : ""}
                 href={item.href}
                 key={item.label}
               >
                 {item.label}
               </Link>
             ))}
-            <Link className="mobile-cta" href="/#contact">
+            <Link className="mobile-cta" href="/contact">
               Start a Project
             </Link>
           </div>

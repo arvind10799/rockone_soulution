@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+export type Faq = { q: string; a: string };
+
 export type Service = {
   slug: string;
   title: string;
@@ -7,6 +9,8 @@ export type Service = {
   summary: string;
   deliverables: string[];
   outcomes: string[];
+  /** Optional per-service FAQ. Falls back to serviceDetailFaqs when absent. */
+  faqs?: Faq[];
 };
 
 export type ServiceCategory = {
@@ -287,6 +291,24 @@ export const serviceCategories: ServiceCategory[] = [
           "A clear view of what's working",
           "Marketing tied to revenue"
         ]
+      },
+      {
+        slug: "performance-marketing",
+        title: "Performance Marketing",
+        tagline: "Spend measured against pipeline, not impressions.",
+        summary:
+          "Full-funnel campaign management where every channel, creative, and keyword is judged on the revenue it produces — with the tracking in place to prove it.",
+        deliverables: [
+          "Channel strategy and media planning",
+          "Conversion tracking and attribution setup",
+          "Creative testing and landing page iteration",
+          "Weekly performance reporting"
+        ],
+        outcomes: [
+          "Budget shifted to what actually converts",
+          "Cost per acquisition you can defend",
+          "Campaign spend tied to closed revenue"
+        ]
       }
     ]
   },
@@ -404,6 +426,50 @@ export const processSteps = [
     step: "05",
     title: "Optimize",
     body: "We measure, refine, and support, so results compound long after go-live."
+  }
+];
+
+/* Shown on every service detail page: what a prospect does next, and how
+   quickly they hear back. Kept generic so it stays true for all services. */
+export const nextSteps = [
+  {
+    step: "01",
+    title: "Send us the brief",
+    body: "Share your goal, timeline, and budget range. A two-line message is enough to start — no formal spec required."
+  },
+  {
+    step: "02",
+    title: "Get a scoped proposal",
+    body: "Within two working days you get a written scope, milestone plan, and fixed price for the work as described."
+  },
+  {
+    step: "03",
+    title: "Start with a clear plan",
+    body: "Once approved, we set the milestones, name your point of contact, and begin — with progress visible each week."
+  }
+];
+
+/* Fallback FAQ used when a service does not define its own `faqs`. */
+export const serviceDetailFaqs: Faq[] = [
+  {
+    q: "How quickly can we get a quote?",
+    a: "Most scopes come back within two working days. If the requirement is complex, we will tell you within a day what else we need to price it properly."
+  },
+  {
+    q: "Do you work with fixed prices or hourly rates?",
+    a: "Defined project work is quoted at a fixed price against a written scope. Ongoing support and retained work runs on a monthly or hourly agreement, whichever fits better."
+  },
+  {
+    q: "What do you need from us to begin?",
+    a: "A clear goal, a decision maker who can approve scope, and access to any existing systems. We handle the technical discovery ourselves."
+  },
+  {
+    q: "Can you work with our existing team or platform?",
+    a: "Yes. We regularly extend in-house teams and build on top of existing sites, CRMs, and hosting rather than insisting on a rebuild."
+  },
+  {
+    q: "What happens after launch?",
+    a: "You get a handover, documentation, and a support window. Ongoing maintenance, optimization, and feature work are available as a separate agreement."
   }
 ];
 

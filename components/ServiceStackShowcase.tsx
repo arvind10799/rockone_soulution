@@ -107,15 +107,18 @@ const serviceGroups = [
 
 export default function ServiceStackShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
   const activeGroup = serviceGroups[activeIndex];
 
   useEffect(() => {
+    if (paused) return;
+
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % serviceGroups.length);
     }, 5200);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [paused]);
 
   return (
     <section className="what-we-do-section flow-section flow-left" aria-labelledby="what-we-do-title">
@@ -136,7 +139,14 @@ export default function ServiceStackShowcase() {
         </div>
       </div>
 
-      <div className="service-board">
+      {/* Rotation pauses while the visitor is reading or tabbing through. */}
+      <div
+        className="service-board"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+      >
         <div className="service-category-stack" aria-label="Service categories">
           {serviceGroups.map((group, index) => (
             <button

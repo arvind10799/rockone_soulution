@@ -47,6 +47,90 @@ a {
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
+/* ---------------------------------------------------------------------------
+   Dark header — opted into per page via <SiteHeader tone="dark" />.
+   Used by the Auto Parts CRM case study, whose ground is deep navy.
+   --------------------------------------------------------------------------- */
+
+.site-header.is-dark {
+  border-bottom-color: rgba(255, 255, 255, 0.09);
+  background: rgba(11, 18, 32, 0.82);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: none;
+}
+
+.site-header.is-dark .brand-text strong {
+  color: #ffffff;
+}
+
+.site-header.is-dark .brand-text small {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.site-header.is-dark .brand-mark {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.site-header.is-dark .nav-link {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.site-header.is-dark .nav-link.active,
+.site-header.is-dark .nav-link:hover,
+.site-header.is-dark .nav-dropdown:hover > .nav-link,
+.site-header.is-dark .nav-dropdown:focus-within > .nav-link {
+  color: var(--orange);
+}
+
+.site-header.is-dark .header-cta {
+  color: #0b1220;
+  background: #ffffff;
+}
+
+/* The dropdown and the mobile overlay are white by default and would flash
+   bright against the dark page, so both are inverted too. */
+.site-header.is-dark .dropdown-panel {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #101c33;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+.site-header.is-dark .dropdown-panel a {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.site-header.is-dark .dropdown-panel a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.site-header.is-dark .mobile-menu > summary {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.site-header.is-dark .mobile-menu > summary span {
+  background: #ffffff;
+}
+
+.site-header.is-dark .mobile-menu-panel {
+  background: #0b1220;
+}
+
+.site-header.is-dark .mobile-menu-panel a,
+.site-header.is-dark .mobile-services summary {
+  color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.site-header.is-dark .mobile-cta {
+  color: #0b1220;
+  background: #ffffff;
+}
+
 .header-inner {
   width: min(1320px, calc(100% - 56px));
   height: 100%;
@@ -779,16 +863,6 @@ body:has(.mobile-menu[open]) .mobile-tabbar {
   z-index: 3;
 }
 
-@keyframes hero-image-drift {
-  from {
-    transform: scale(1.018) translate3d(0, 0, 0);
-  }
-
-  to {
-    transform: scale(1.035) translate3d(-10px, -4px, 0);
-  }
-}
-
 @keyframes live-layer-presence {
   0%,
   100% {
@@ -799,16 +873,6 @@ body:has(.mobile-menu[open]) .mobile-tabbar {
   50% {
     filter: saturate(1.18) brightness(1.04);
     transform: translate3d(10px, -6px, 0);
-  }
-}
-
-@keyframes hero-signal-flow {
-  from {
-    background-position: 0% 0%, center, center;
-  }
-
-  to {
-    background-position: 100% 0%, center, center;
   }
 }
 
@@ -925,19 +989,6 @@ body:has(.mobile-menu[open]) .mobile-tabbar {
   }
 }
 
-@keyframes live-panel-float {
-  0%,
-  100% {
-    opacity: 0.38;
-    transform: perspective(620px) translate3d(0, 0, 0) rotateY(-20deg) rotateX(8deg);
-  }
-
-  50% {
-    opacity: 0.72;
-    transform: perspective(620px) translate3d(16px, -18px, 0) rotateY(-12deg) rotateX(5deg);
-  }
-}
-
 @keyframes packet-run-one {
   0% {
     opacity: 0;
@@ -1009,7 +1060,7 @@ body:has(.mobile-menu[open]) .mobile-tabbar {
 
 .hero-content {
   width: 100%;
-  max-width: 920px;
+  max-width: 1010px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -1019,7 +1070,7 @@ body:has(.mobile-menu[open]) .mobile-tabbar {
 
 .hero-copy {
   width: 100%;
-  max-width: 880px;
+  max-width: 970px;
   position: relative;
   isolation: isolate;
   display: flex;
@@ -1094,11 +1145,14 @@ h1 {
 }
 
 .hero-title {
-  max-width: 880px;
+  max-width: 970px;
   margin: 0 auto;
   position: relative;
   isolation: isolate;
   padding-bottom: 0.08em;
+  /* Longer headline than the previous one — sized so the second line
+     ("Powered by AI to Grow Revenue") clears .hero-copy without wrapping. */
+  font-size: clamp(2.15rem, 3.55vw, 3.6rem);
 }
 
 .title-line {
@@ -1128,6 +1182,10 @@ h1 {
 
 .title-line:nth-child(2) > span:nth-child(1) {
   animation-delay: 330ms;
+}
+
+.title-line:nth-child(2) > span:nth-child(3) {
+  animation-delay: 580ms;
 }
 
 .innovation-word {
@@ -1211,42 +1269,8 @@ h1 {
   }
 }
 
-@keyframes copy-signal-in {
-  to {
-    opacity: 1;
-    transform: scaleX(1);
-  }
-}
-
-@keyframes copy-signal-pulse {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 0 rgba(28, 95, 184, 0));
-    opacity: 0.68;
-  }
-
-  50% {
-    filter: drop-shadow(0 0 12px rgba(28, 95, 184, 0.28));
-    opacity: 1;
-  }
-}
-
-@keyframes copy-node-pulse {
-  0%,
-  100% {
-    opacity: 0.34;
-    transform: scale(0.78);
-  }
-
-  48%,
-  56% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .intro {
-  max-width: 680px;
+  max-width: 760px;
   margin: 24px auto 0;
   color: #43516a;
   font-size: clamp(1.05rem, 1.35vw, 1.2rem);
@@ -1328,16 +1352,23 @@ h1 {
   left: 110%;
 }
 
+/* Four pillars: Build, Automate, AI, Revenue.
+   Dividers come from a 1px grid gap over a border-coloured background (the same
+   technique as .services-hero-proof) so they survive a 2-up or 1-up wrap without
+   nth-child border juggling. */
 .system-flow {
   width: 100%;
-  max-width: 720px;
+  max-width: 940px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  margin: clamp(34px, 4.5vh, 52px) auto 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: clamp(30px, 4vh, 48px) auto 0;
+  padding: 1px;
   text-align: left;
-  border-top: 1px solid #dfe7f1;
-  border-bottom: 1px solid #dfe7f1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #dfe7f1;
+  box-shadow: 0 18px 44px -30px rgba(19, 39, 92, 0.4);
   opacity: 0;
   transform: translateY(18px);
   animation: copy-rise-in 760ms 940ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -1346,21 +1377,18 @@ h1 {
 .system-flow div {
   position: relative;
   display: grid;
-  gap: 7px;
-  padding: 17px 20px 17px 28px;
-  border-right: 1px solid #dfe7f1;
-}
-
-.system-flow div:last-child {
-  border-right: 0;
+  align-content: start;
+  gap: 6px;
+  padding: 17px 18px 17px 26px;
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .system-flow div::before {
   width: 8px;
   height: 8px;
   position: absolute;
-  left: 4px;
-  top: 23px;
+  left: 3px;
+  top: 22px;
   content: "";
   border-radius: 999px;
   background: var(--orange);
@@ -1376,8 +1404,16 @@ h1 {
 
 .system-flow span {
   color: #647084;
-  font-size: 0.84rem;
-  line-height: 1.42;
+  font-size: 0.82rem;
+  line-height: 1.38;
+}
+
+.system-flow small {
+  color: var(--orange);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.3;
 }
 
 .hero-visual {
@@ -1871,7 +1907,8 @@ h1 {
   width: max-content;
   display: flex;
   gap: 16px;
-  animation: client-logo-scroll 26s linear infinite;
+  /* Duration scales with the number of logos to keep a constant scroll speed. */
+  animation: client-logo-scroll 72s linear infinite;
 }
 
 .logo-marquee:hover .logo-marquee-track {
@@ -1940,6 +1977,21 @@ h1 {
 .client-logo-rental {
   background:
     linear-gradient(135deg, rgba(28, 95, 184, 0.12), rgba(243, 90, 43, 0.06));
+}
+
+/* Logos supplied with dark ink need a light plate to read on the near-black
+   strip. Applied per client via the `plate` flag on the logo data. */
+.client-logo-plated {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: linear-gradient(135deg, #ffffff, #f2f6fb);
+}
+
+.client-logo-plated:hover {
+  border-color: rgba(16, 168, 223, 0.55);
+}
+
+.client-logo-plated .client-logo-image {
+  height: 64px;
 }
 
 @keyframes client-logo-scroll {
@@ -4227,8 +4279,17 @@ h1 {
   align-content: start;
 }
 
-.contact-form input {
+.contact-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
   min-height: 54px;
+  width: 100%;
   border: 1px solid #dfe7f1;
   border-radius: 14px;
   padding: 0 16px;
@@ -4239,9 +4300,43 @@ h1 {
   outline: none;
 }
 
-.contact-form input:focus {
+.contact-form textarea {
+  padding: 16px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+/* Native select arrow replaced so it matches the input styling. */
+.contact-form select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 42px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23647084' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 18px 18px;
+  cursor: pointer;
+}
+
+.contact-form select:invalid {
+  color: #97a3b4;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
   border-color: rgba(28, 95, 184, 0.36);
   box-shadow: 0 0 0 4px rgba(28, 95, 184, 0.08);
+}
+
+/* Honeypot: kept in the DOM for bots, removed from view and from a11y tree. */
+.contact-form-botcheck {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .contact-form button {
@@ -4253,6 +4348,41 @@ h1 {
   cursor: pointer;
   font: inherit;
   font-weight: 760;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.contact-form button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.contact-form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.contact-form-status {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.contact-form-status:empty {
+  display: none;
+}
+
+.contact-form-status.is-idle,
+.contact-form-status.is-submitting {
+  color: #647084;
+}
+
+.contact-form-status.is-success {
+  color: #0f7a4d;
+  font-weight: 650;
+}
+
+.contact-form-status.is-error {
+  color: #b91c1c;
+  font-weight: 600;
 }
 
 .insight-section {
@@ -4714,54 +4844,6 @@ h1 {
   }
 }
 
-@keyframes section-slide-up {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 54px, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes section-slide-left {
-  from {
-    opacity: 0;
-    transform: translate3d(54px, 40px, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes section-slide-right {
-  from {
-    opacity: 0;
-    transform: translate3d(-54px, 40px, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes card-rise {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 28px, 0) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
 .motion-ready .flow-section,
 .motion-ready .site-footer {
   opacity: 0;
@@ -4809,14 +4891,55 @@ h1 {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
-@keyframes crm-snapshot-float {
-  0%,
-  100% {
-    translate: 0 0;
-  }
+/* ---------------------------------------------------------------------------
+   data-reveal: the general entrance system.
+   `--reveal-index` is set per parent by ScrollAnimator, so each grid staggers
+   from zero. `--reveal-step` and `--reveal-delay` are tunable per element.
+   --------------------------------------------------------------------------- */
 
-  50% {
-    translate: 0 -12px;
+.motion-ready [data-reveal] {
+  opacity: 0;
+  transition:
+    opacity var(--reveal-duration, 720ms) cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--reveal-duration, 720ms) cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(
+    var(--reveal-delay, 0ms) + var(--reveal-index, 0) * var(--reveal-step, 80ms)
+  );
+  will-change: opacity, transform;
+}
+
+.motion-ready [data-reveal="up"] {
+  transform: translate3d(0, 38px, 0);
+}
+
+.motion-ready [data-reveal="left"] {
+  transform: translate3d(-46px, 18px, 0);
+}
+
+.motion-ready [data-reveal="right"] {
+  transform: translate3d(46px, 18px, 0);
+}
+
+.motion-ready [data-reveal="scale"] {
+  transform: translate3d(0, 26px, 0) scale(0.965);
+}
+
+.motion-ready [data-reveal="settle"] {
+  transform: scale(1.04);
+}
+
+.motion-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-ready [data-reveal],
+  .motion-ready [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
@@ -5224,6 +5347,11 @@ h1 {
     white-space: normal;
   }
 
+  .system-flow {
+    max-width: 640px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .automation-panel {
     max-width: 640px;
     margin-left: 0;
@@ -5437,21 +5565,11 @@ h1 {
   }
 
   .system-flow {
-    margin-top: 38px;
+    margin-top: 34px;
     grid-template-columns: 1fr;
-    border: 1px solid #e3e9f1;
+    padding: 1px;
     border-radius: 16px;
     overflow: hidden;
-  }
-
-  .system-flow div,
-  .system-flow div:last-child {
-    border-right: 0;
-    border-bottom: 1px solid #e3e9f1;
-  }
-
-  .system-flow div:last-child {
-    border-bottom: 0;
   }
 
   .automation-panel {

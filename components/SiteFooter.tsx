@@ -5,6 +5,7 @@ const footerServices = [
   { label: "Website Redesign", slug: "website-redesign" },
   { label: "Custom Software", slug: "custom-software-development" },
   { label: "CRM Systems", slug: "crm-systems" },
+  { label: "Performance Marketing", slug: "performance-marketing" },
   { label: "SEO", slug: "seo" }
 ];
 
@@ -32,7 +33,7 @@ export default function SiteFooter() {
             Premium websites, CRM-connected workflows, and growth systems for
             businesses that want a sharper digital front door.
           </p>
-          <Link className="footer-cta" href="/#contact">
+          <Link className="footer-cta" href="/contact">
             Start a Project
           </Link>
         </div>
@@ -45,7 +46,8 @@ export default function SiteFooter() {
             <Link href="/work/auto-parts-crm">Auto Parts CRM Case Study</Link>
             <Link href="/remote-tech-team">Remote Team</Link>
             <Link href="/about">About</Link>
-            <Link href="/#blog">Blog</Link>
+            <Link href="/blog">Blog</Link>
+            <Link href="/contact">Contact</Link>
           </div>
           <div>
             <strong>Services</strong>
@@ -59,13 +61,13 @@ export default function SiteFooter() {
             <strong>Contact</strong>
             <a href="tel:+918197731627">+91 8197731627</a>
             <a href="mailto:Info@rockonesolutions.com">Info@rockonesolutions.com</a>
-            <span>BHIVE Workspace, AKR Tech Park, Bengaluru</span>
+            <span>Site No. 157, 9th Main, Sector 06, HSR Layout, Bengaluru, Karnataka, 560102</span>
           </div>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>Copyright 2026 Rock One Solutions. All rights reserved.</span>
-        <span>Website development + revenue automation agency</span>
+        <span>&copy; 2026 Rock One Solutions. All rights reserved.</span>
+        <span>Development · AI Automation · Revenue Systems</span>
       </div>
     </footer>
   );

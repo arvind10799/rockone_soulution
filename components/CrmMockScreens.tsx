@@ -788,53 +788,94 @@ export function UsersScreen() {
   );
 }
 
-export const crmScreens = [
+export type CrmChapter = {
+  id: string;
+  tab: string;
+  /** Workspace name as it appears in the app's sidebar. */
+  module: string;
+  title: string;
+  blurb: string;
+  /** What this module was designed to protect. */
+  protects: string;
+  url: string;
+  node: ReactNode;
+};
+
+/**
+ * Six chapters, each pairing one recreated screen with the design intent behind
+ * it. Drives the pinned scroll sequence on the case study page.
+ */
+export const crmScreens: CrmChapter[] = [
   {
     id: "dashboard",
     tab: "Dashboard",
+    module: "Dashboard",
     title: "A command center built around the next action",
     blurb:
       "Pipeline health, open follow-ups, shipment alerts, and revenue signals in one view — scoped to whoever is signed in.",
+    protects:
+      "Every card leads with the figure at display weight, then explains it. A manager scanning the dashboard reads values before they read words.",
+    url: "crm.meeautoparts.com/dashboard",
     node: <DashboardScreen />
   },
   {
     id: "leads",
     tab: "Leads",
+    module: "Leads",
     title: "Every inquiry captured with a status that means something",
     blurb:
       "Six pipeline stages, adviser ownership, quote value, and a one-click path from a qualified lead into a live order.",
+    protects:
+      "Prospect, quoted, call back later, shopping around, needs locally, and we don't sell. Losses are recorded with a reason so the pipeline reflects reality instead of optimism.",
+    url: "crm.meeautoparts.com/leads",
     node: <LeadsScreen />
   },
   {
     id: "orders",
     tab: "Orders",
+    module: "Orders",
     title: "Orders that carry the whole story",
     blurb:
       "Order number, customer, part, sale value, and live shipping status in a single searchable table with date scoping.",
+    protects:
+      "Adviser, customer, vehicle, VIN, variant, pricing, billing, and shipping live together — searchable by order number, customer, email, or part.",
+    url: "crm.meeautoparts.com/orders",
     node: <OrdersScreen />
   },
   {
     id: "invoice",
     tab: "Invoice",
+    module: "Invoicing",
     title: "Invoice, signature, and audit trail in one place",
     blurb:
       "Generate, send, re-send, and re-sign an invoice without leaving the order — every action written to the notes timeline.",
+    protects:
+      "The invoice panel exposes every action a sales admin actually needs, and each one writes to a timeline with author and timestamp. Disputes get answered from the record.",
+    url: "crm.meeautoparts.com/orders/MAP08042603",
     node: <OrderDetailScreen />
   },
   {
     id: "shipments",
     tab: "Shipments",
+    module: "Shipments",
     title: "BOL and PRO tracking with exceptions pulled forward",
     blurb:
       "Delayed shipments are counted separately from in-transit ones so the team works the exceptions first.",
+    protects:
+      "The shipment view counts in-transit and delayed loads separately, so the team opens the day on the shipments that are slipping, not the ones that are fine.",
+    url: "crm.meeautoparts.com/shipments",
     node: <ShipmentsScreen />
   },
   {
     id: "users",
     tab: "User Center",
+    module: "Access",
     title: "Role-based access the admin controls",
     blurb:
       "Admins, sales agents, and shipping accounts each see a different app — created and revoked from one screen.",
+    protects:
+      "Admins create sales agents and shipping accounts with status control — no developer involvement to onboard or revoke a user.",
+    url: "crm.meeautoparts.com/user-center",
     node: <UsersScreen />
   }
 ];

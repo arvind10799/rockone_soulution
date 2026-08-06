@@ -1,5 +1,6 @@
 import AgileProcessSection from "@/components/AgileProcessSection";
 import ClientReviewsCarousel from "@/components/ClientReviewsCarousel";
+import ContactForm from "@/components/ContactForm";
 import CrmErpShowcase from "@/components/CrmErpShowcase";
 import HeroBackgroundScene from "@/components/HeroBackgroundScene";
 import IndustrySpecializations from "@/components/IndustrySpecializations";
@@ -9,19 +10,29 @@ import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import TechStackMarquee from "@/components/TechStackMarquee";
 import Image from "next/image";
+import Link from "next/link";
+import { blogPosts } from "./blog/blog-data";
 
 const systemFlow = [
   {
-    title: "Website",
-    detail: "Convert the visit"
+    title: "Build",
+    detail: "Websites, Apps & CRM",
+    outcome: "Ship the product"
   },
   {
-    title: "Automation",
-    detail: "Move the lead"
+    title: "Automate",
+    detail: "Workflows & CRM hand-offs",
+    outcome: "Move the lead"
+  },
+  {
+    title: "AI",
+    detail: "Agents & consultation",
+    outcome: "Work smarter"
   },
   {
     title: "Revenue",
-    detail: "Follow up faster"
+    detail: "Follow-up & performance",
+    outcome: "Grow faster"
   }
 ];
 
@@ -55,6 +66,71 @@ const clientLogos = [
     category: "Bookings",
     logo: "/client-logos/mee-car-rentals.png",
     tone: "rental"
+  },
+  {
+    name: "Intracia Technologies",
+    category: "Technology services",
+    logo: "/client-logos/intracia-technologies.png",
+    tone: "tech",
+    plate: true
+  },
+  {
+    name: "ProfitPulse LLC",
+    category: "Financial services",
+    logo: "/client-logos/profit-pulse.png",
+    tone: "tech",
+    plate: true
+  },
+  {
+    name: "Intra Tours and Travels",
+    category: "Travel and bookings",
+    logo: "/client-logos/intra-tours-travels.png",
+    tone: "rental",
+    plate: true
+  },
+  {
+    name: "DriveX Auto Parts",
+    category: "Auto parts",
+    logo: "/client-logos/drivex-auto-parts.webp",
+    tone: "auto"
+  },
+  {
+    name: "Mr Bhahuk Gaming",
+    category: "Gaming and creator",
+    logo: "/client-logos/mr-bhahuk-gaming.webp",
+    tone: "tech"
+  },
+  {
+    name: "Mr JD Gaming",
+    category: "Gaming and creator",
+    logo: "/client-logos/mr-jd-gaming.png",
+    tone: "tech"
+  },
+  {
+    name: "LionX Gaming",
+    category: "Gaming and creator",
+    logo: "/client-logos/lionx-gaming.webp",
+    tone: "tech"
+  },
+  {
+    name: "Play With Bhahuk",
+    category: "Games and apps",
+    logo: "/client-logos/play-with-bhahuk-wordmark.svg",
+    tone: "tech"
+  },
+  {
+    name: "Pandit Suresh Sharma Ji",
+    category: "Astrology",
+    logo: "/client-logos/pandit-suresh-sharma.png",
+    tone: "foods",
+    plate: true
+  },
+  {
+    // Placeholder wordmark: the client site publishes no brand logo asset.
+    name: "Subhash Chandra Jyotish",
+    category: "Astrology",
+    logo: "/client-logos/subhash-chandra-jyotish-wordmark.svg",
+    tone: "foods"
   }
 ];
 
@@ -115,29 +191,8 @@ const clientReviews = [
   }
 ];
 
-const insightCards = [
-  {
-    category: "Web Design",
-    readTime: "4 min read",
-    title: "Designing for trust before traffic",
-    body:
-      "A premium website should make the business feel credible in seconds, then guide visitors toward a clear next action."
-  },
-  {
-    category: "Automation",
-    readTime: "5 min read",
-    title: "Turning campaigns into measurable handoffs",
-    body:
-      "SEO and paid media perform better when every lead has a clean route into CRM, follow-up, and reporting."
-  },
-  {
-    category: "Growth",
-    readTime: "3 min read",
-    title: "Using automation where it actually helps",
-    body:
-      "The goal is not more tools. It is fewer missed inquiries, faster response times, and better visibility for the team."
-  }
-];
+/* The homepage teaser always shows the three newest posts. */
+const insightCards = blogPosts.slice(0, 3);
 
 export default function Home() {
   return (
@@ -171,29 +226,34 @@ export default function Home() {
           </div>
           <div className="hero-content">
             <div className="hero-copy">
-              <p className="eyebrow">Website development + revenue automation agency</p>
+              <p className="eyebrow">Development · AI Automation · Revenue Systems</p>
               <p className="audience-line">
                 For ambitious service brands, consultants, and growth teams ready
-                to{" "}
-                <strong>look sharper, move faster, and convert with confidence.</strong>
+                to <strong>move faster and convert with confidence.</strong>
               </p>
-              <h1 className="hero-title" aria-label="Elevate Your Brand Through Innovation">
+              <h1
+                className="hero-title"
+                aria-label="Websites, Apps and CRM, powered by AI to grow revenue"
+              >
                 <span className="title-line">
-                  <span>Elevate</span>
+                  <span>Websites,</span>
                   {" "}
-                  <span>Your Brand</span>
+                  <span>Apps &amp; CRM,</span>
                 </span>
                 {" "}
                 <span className="title-line">
-                  <span>Through</span>
+                  <span>Powered by</span>
                   {" "}
-                  <span className="innovation-word">Innovation</span>
+                  <span className="innovation-word">AI</span>
+                  {" "}
+                  <span>to Grow Revenue</span>
                 </span>
               </h1>
               <p className="intro">
-                We craft <strong>polished, conversion-focused websites</strong> and
-                connect every lead, CRM handoff, follow-up sequence, and performance
-                signal into <strong>one revenue workflow.</strong>
+                We design and build{" "}
+                <strong>high-converting websites, apps, and CRMs</strong> — then wire in
+                AI automation so every lead, follow-up, and hand-off runs as{" "}
+                <strong>one revenue workflow.</strong>
               </p>
               <div className="actions" aria-label="Hero actions">
                 <a href="#contact" className="primary-action">
@@ -204,11 +264,12 @@ export default function Home() {
                 </a>
               </div>
             </div>
-            <div className="system-flow" aria-label="Website automation revenue system">
+            <div className="system-flow" aria-label="Build, automate, AI, and revenue system">
               {systemFlow.map((stage) => (
                 <div key={stage.title}>
                   <strong>{stage.title}</strong>
                   <span>{stage.detail}</span>
+                  <small>{stage.outcome}</small>
                 </div>
               ))}
             </div>
@@ -224,7 +285,10 @@ export default function Home() {
             <div className="logo-marquee-track">
               <div className="logo-marquee-group">
                 {clientLogos.map((client) => (
-                  <article className={`client-logo-card client-logo-${client.tone}`} key={client.name}>
+                  <article
+                    className={`client-logo-card client-logo-${client.tone}${client.plate ? " client-logo-plated" : ""}`}
+                    key={client.name}
+                  >
                     <Image
                       src={client.logo}
                       alt={`${client.name} logo`}
@@ -237,7 +301,10 @@ export default function Home() {
               </div>
               <div className="logo-marquee-group" aria-hidden="true">
                 {clientLogos.map((client) => (
-                  <article className={`client-logo-card client-logo-${client.tone}`} key={`${client.name}-duplicate`}>
+                  <article
+                    className={`client-logo-card client-logo-${client.tone}${client.plate ? " client-logo-plated" : ""}`}
+                    key={`${client.name}-duplicate`}
+                  >
                     <Image
                       src={client.logo}
                       alt=""
@@ -328,30 +395,35 @@ export default function Home() {
                 systems that turn attention into measurable revenue.
               </p>
             </div>
-            <a href="#contact" className="insight-viewall">
+            <Link href="/blog" className="insight-viewall">
               Read the blog
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
-            </a>
+            </Link>
           </div>
 
           <div className="insight-grid">
-            {insightCards.map((card) => (
-              <a className="insight-card" key={card.title} href="#contact" aria-label={`${card.title} — read note`}>
+            {insightCards.map((post) => (
+              <Link
+                className="insight-card"
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                aria-label={`${post.title} — read note`}
+              >
                 <div className="insight-card-top">
-                  <span className="insight-tag">{card.category}</span>
-                  <span className="insight-readtime">{card.readTime}</span>
+                  <span className="insight-tag">{post.category}</span>
+                  <span className="insight-readtime">{post.readTime}</span>
                 </div>
-                <h3>{card.title}</h3>
-                <p>{card.body}</p>
+                <h3>{post.title}</h3>
+                <p>{post.excerpt}</p>
                 <span className="insight-more">
                   Read note
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M5 12h14M13 6l6 6-6 6" />
                   </svg>
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
         </section>
@@ -368,16 +440,10 @@ export default function Home() {
               <div className="contact-details" aria-label="Contact details">
                 <a href="tel:+918197731627">+91 8197731627</a>
                 <a href="mailto:Info@rockonesolutions.com">Info@rockonesolutions.com</a>
-                <span>BHIVE Workspace, AKR Tech Park, Bengaluru</span>
+                <span>Site No. 157, 9th Main, Sector 06, HSR Layout, Bengaluru, Karnataka, 560102</span>
               </div>
             </div>
-            <form className="contact-form">
-              <input aria-label="First name" placeholder="First name" />
-              <input aria-label="Last name" placeholder="Last name" />
-              <input aria-label="Email" type="email" placeholder="Email" />
-              <input aria-label="Phone number" type="tel" placeholder="Phone number" />
-              <button type="button">Send</button>
-            </form>
+            <ContactForm />
           </div>
         </section>
       </main>

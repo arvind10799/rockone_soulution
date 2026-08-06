@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
+import type { IndustryName } from "./industry-names";
 
-type Industry = { name: string; icon: ReactNode };
+/* `name` is typed against the shared list so this grid and the contact form's
+   industry dropdown can never drift apart. */
+type Industry = { name: IndustryName; icon: ReactNode };
 
 const s = {
   fill: "none" as const,

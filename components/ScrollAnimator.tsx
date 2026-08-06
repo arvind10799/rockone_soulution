@@ -2,6 +2,17 @@
 
 import { useEffect } from "react";
 
+/**
+ * One IntersectionObserver drives every scroll reveal on the site.
+ *
+ * Two ways to opt in:
+ *   - legacy: a class from `animatedSelector` below
+ *   - preferred: `data-reveal="up | left | right | scale"` on any element
+ *
+ * Elements are indexed **within their parent**, so a grid of six cards always
+ * staggers 0..5 regardless of what came before it in the document.
+ */
+
 const animatedSelector = [
   ".flow-section",
   ".pillar-card",
@@ -11,8 +22,11 @@ const animatedSelector = [
   ".crm-module-card",
   ".contact-panel",
   ".cs-reveal",
-  ".site-footer"
+  ".site-footer",
+  "[data-reveal]"
 ].join(",");
+
+const MAX_STAGGER_STEPS = 7;
 
 export default function ScrollAnimator() {
   useEffect(() => {
@@ -26,6 +40,7 @@ export default function ScrollAnimator() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
           }
         });
       },
@@ -35,8 +50,22 @@ export default function ScrollAnimator() {
       }
     );
 
-    elements.forEach((element, index) => {
-      element.style.setProperty("--reveal-index", `${Math.min(index % 6, 5)}`);
+    // Stagger index resets per parent so each grid counts from zero.
+    const seenPerParent = new Map<Element, number>();
+
+    elements.forEach((element) => {
+      const parent = element.parentElement;
+      let index = 0;
+
+      if (parent) {
+        index = seenPerParent.get(parent) ?? 0;
+        seenPerParent.set(parent, index + 1);
+      }
+
+      element.style.setProperty(
+        "--reveal-index",
+        `${Math.min(index, MAX_STAGGER_STEPS - 1)}`
+      );
       observer.observe(element);
     });
 

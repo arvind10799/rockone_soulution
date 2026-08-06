@@ -39,7 +39,7 @@ export default function MobileTabBar() {
         <span>Services</span>
       </Link>
 
-      <Link href="/#contact" className="mobile-tab-cta" aria-label="Start a project">
+      <Link href="/contact" className="mobile-tab-cta" aria-label="Start a project">
         <svg viewBox="0 0 24 24" {...stroke} aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
         </svg>

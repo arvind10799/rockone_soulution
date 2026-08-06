@@ -211,7 +211,7 @@ export default function AboutPage() {
               and creative strategy.
             </p>
             <div className="about-hero-actions">
-              <Link href="/#contact" className="about-btn-primary">
+              <Link href="/contact" className="about-btn-primary">
                 Start a Project {arrow}
               </Link>
               <a href="tel:+918197731627" className="about-btn-ghost">
@@ -348,7 +348,7 @@ export default function AboutPage() {
               growth workflow to get you there.
             </p>
             <div className="about-cta-actions">
-              <Link href="/#contact" className="about-btn-primary">
+              <Link href="/contact" className="about-btn-primary">
                 Start a Project {arrow}
               </Link>
               <a href="tel:+918197731627" className="about-btn-ghost about-btn-ghost-dark">

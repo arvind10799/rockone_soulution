@@ -3,8 +3,8 @@ import Link from "next/link";
 import ScrollAnimator from "@/components/ScrollAnimator";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
-import CrmScrollSequence from "@/components/CrmScrollSequence";
-import { DashboardScreen, OrderDetailScreen } from "@/components/CrmMockScreens";
+import CrmDemoReel from "@/components/CrmDemoReel";
+import { crmScreens, OrderDetailScreen } from "@/components/CrmMockScreens";
 import "./crm-mock.css";
 import "./case-study.css";
 
@@ -20,20 +20,11 @@ const arrow = (
   </svg>
 );
 
-/* Split into lines so each can rise out of its own mask. */
-const heroHeadline = [
-  "One workspace that carries an",
-  "auto-parts lead from first call",
-  "to signed invoice."
-];
-
+/* Exactly the three fields the reference case study carries. */
 const meta = [
-  { label: "Client", value: "Intracia Technologies" },
-  { label: "Product", value: "MEE Auto Parts CRM" },
-  { label: "Industry", value: "Auto parts distribution" },
   { label: "Project type", value: "Internal product" },
-  { label: "Deliverables", value: "Product strategy, UX / UI design, custom software, workflow automation" },
-  { label: "Platform", value: "Responsive web application" }
+  { label: "Stage", value: "Established operator" },
+  { label: "Deliverables", value: "Product strategy, UX / UI design, custom software, workflow automation" }
 ];
 
 /* Product facts counted from the shipped build — swap in commercial results
@@ -45,59 +36,44 @@ const stats = [
   { value: "1", label: "record end to end", note: "The same order carries quote, invoice, signature, and shipment" }
 ];
 
-const problems = [
+/* "Old meets new" — the four leaks, each answered by what replaced it. */
+const oldVsNew = [
   {
-    title: "Leads lived in three places",
-    body:
-      "Inbound calls, marketplace inquiries, and follow-ups were split across spreadsheets, inboxes, and personal notes. Nobody could say what was still open."
+    old: "Leads lived in three places",
+    oldBody:
+      "Inbound calls, marketplace inquiries, and follow-ups were split across spreadsheets, inboxes, and personal notes. Nobody could say what was still open.",
+    now: "One pipeline with honest statuses"
   },
   {
-    title: "Quotes did not become orders",
-    body:
-      "Converting a quote meant retyping customer, vehicle, and part details into a second system — so quotes went cold while the paperwork caught up."
+    old: "Quotes did not become orders",
+    oldBody:
+      "Converting a quote meant retyping customer, vehicle, and part details into a second system — so quotes went cold while the paperwork caught up.",
+    now: "One action promotes a lead"
   },
   {
-    title: "Invoicing stalled on signatures",
-    body:
-      "Invoices were generated outside the workflow, emailed manually, and chased over phone. No one could see whether a customer had signed."
+    old: "Invoicing stalled on signatures",
+    oldBody:
+      "Invoices were generated outside the workflow, emailed manually, and chased over phone. No one could see whether a customer had signed.",
+    now: "Generate, send, sign, re-issue in place"
   },
   {
-    title: "Shipping was a black box",
-    body:
-      "BOL and PRO numbers sat with the carrier desk. Sales had no way to answer 'where is my part?' without forwarding the question."
+    old: "Shipping was a black box",
+    oldBody:
+      "BOL and PRO numbers sat with the carrier desk. Sales had no way to answer 'where is my part?' without forwarding the question.",
+    now: "BOL and PRO on the order itself"
   }
 ];
 
+/* Compressed from the old eight-card grid into a single readable line-up. */
 const flow = [
-  { step: "01", title: "Lead captured", body: "Customer, vehicle, part, and adviser recorded in one form." },
-  { step: "02", title: "Quoted", body: "Quote value and currency attached to the lead, visible in the pipeline." },
-  { step: "03", title: "Converted", body: "One action promotes a qualified lead into a live order — no retyping." },
-  { step: "04", title: "Order built", body: "Pricing, billing, shipping, and part detail on a single order record." },
-  { step: "05", title: "Invoiced", body: "Invoice generated in-app, downloadable as PDF, sent for signature." },
-  { step: "06", title: "Signed", body: "Signing links issued, re-sent, and regenerated without leaving the order." },
-  { step: "07", title: "Shipped", body: "BOL and PRO numbers tracked, with delays surfaced as exceptions." },
-  { step: "08", title: "Reported", body: "Revenue, conversion, and pipeline health roll up to the dashboard." }
-];
-
-/* The per-module "what it protects" copy now lives beside its screen in
-   components/CrmMockScreens.tsx, so the scroll sequence renders both together. */
-
-const roles = [
-  {
-    name: "Admin",
-    body: "Full estate: every lead, order, shipment, cost line, and user account, plus invoice generation and signature control.",
-    items: ["All workspaces", "Invoice + signature control", "User creation and revocation", "Cost tracking"]
-  },
-  {
-    name: "Sales agent",
-    body: "A focused app — a personal command center, their own leads, their own orders, and nothing else competing for attention.",
-    items: ["Personal dashboard", "Own leads and orders", "Quote to order conversion", "Notes"]
-  },
-  {
-    name: "Shipping account",
-    body: "Fulfilment-side access for carrier coordination, built so shipping staff never touch pricing or customer financials.",
-    items: ["Shipment records", "BOL / PRO updates", "Delivery status", "Shipment notes"]
-  }
+  "Lead captured",
+  "Quoted",
+  "Converted",
+  "Order built",
+  "Invoiced",
+  "Signed",
+  "Shipped",
+  "Reported"
 ];
 
 const palette = [
@@ -143,254 +119,104 @@ const outcomes = [
 
 const stack = ["Next.js", "React", "TypeScript", "Node.js", "REST APIs", "PostgreSQL", "PDF generation", "E-signature flow", "Role-based auth"];
 
+/** Full-bleed dark panel holding one recreated screen. */
+function Stage({
+  url,
+  caption,
+  children
+}: {
+  url: string;
+  caption?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="cs-stage" data-reveal="up">
+      <figure className="crm-frame cs-frame">
+        <div className="crm-frame-chrome" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <span>{url}</span>
+        </div>
+        {children}
+      </figure>
+      {caption ? <figcaption className="cs-stage-caption">{caption}</figcaption> : null}
+    </div>
+  );
+}
+
 export default function AutoPartsCrmCaseStudy() {
   return (
     <>
       <ScrollAnimator />
-      <SiteHeader active="work" tone="dark" />
+      <SiteHeader active="work" />
 
       <main className="cs-main">
-        {/* Fixed live background: drifting glow, panning mesh, light streaks. */}
-        <div className="cs-ambient" aria-hidden="true">
-          <span className="cs-ambient-blob" />
-          <span className="cs-ambient-blob" />
-          <span className="cs-ambient-blob" />
-          <span className="cs-ambient-blob" />
-          <span className="cs-ambient-streak" />
-          <span className="cs-ambient-streak" />
-          <span className="cs-ambient-mesh" />
-        </div>
+        {/* ---------------------------------------- title + meta ---------- */}
+        <section className="cs-title-block">
+          <nav className="cs-crumbs" aria-label="Breadcrumb">
+            <Link href="/">Home</Link>
+            <span aria-hidden="true">/</span>
+            <Link href="/services/crm-systems">Work</Link>
+          </nav>
 
-        <section className="cs-hero">
-          <div className="cs-hero-inner">
-            <nav className="cs-crumbs" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
-              <span aria-hidden="true">/</span>
-              <Link href="/services/crm-systems">Work</Link>
-              <span aria-hidden="true">/</span>
-              <strong>Auto Parts CRM</strong>
-            </nav>
+          <h1>Auto Parts CRM</h1>
 
-            <span className="cs-kicker">Case study</span>
+          <dl className="cs-meta">
+            {meta.map((item) => (
+              <div key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
-            {/* Each line is masked by its own overflow container so the text
-                rises out of nothing rather than fading in place. */}
-            <h1 aria-label={heroHeadline.join(" ")}>
-              {heroHeadline.map((line, index) => (
-                <span className="cs-hero-line" key={line} aria-hidden="true">
-                  <span style={{ ["--line" as string]: `${index}` }}>{line}</span>
-                </span>
-              ))}
-            </h1>
+        <section className="cs-hero-media" aria-label="The Auto Parts CRM in use">
+          <CrmDemoReel />
+          <p className="cs-stage-caption">
+            The CRM in use — dashboard, leads, orders, invoicing, shipments, and access,
+            cycling through the shipped interface. All customer records shown are sample
+            data.
+          </p>
+        </section>
 
+        {/* ---------------------------------------- introduction ---------- */}
+        <section className="cs-intro" aria-labelledby="cs-intro-title">
+          <h2 id="cs-intro-title" className="cs-eyebrow">
+            Introduction
+          </h2>
+          <div className="cs-intro-body">
             <p className="cs-lede">
               Intracia Technologies runs MEE Auto Parts, a US aftermarket parts operation
               where a single sale touches quoting, order entry, invoicing, e-signature,
-              carrier handoff, and payment follow-up. We designed and built the CRM that
-              holds all of it on one record.
-            </p>
-
-            <dl className="cs-meta">
-              {meta.map((item, index) => (
-                <div key={item.label} style={{ ["--meta-index" as string]: `${index}` }}>
-                  <dt>{item.label}</dt>
-                  <dd>{item.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
-
-        <section className="cs-showcase" aria-label="Auto Parts CRM sales dashboard">
-          {/* Open-laptop shell. The screen is a 16:10 size container, so the
-              mock inside scales to fill it exactly — see case-study.css. */}
-          <div className="cs-laptop">
-            <div className="cs-laptop-lid">
-              <div className="cs-laptop-screen">
-                <figure className="crm-frame cs-frame cs-frame-hero">
-                  <div className="crm-frame-chrome" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
-                    <span>crm.meeautoparts.com/dashboard</span>
-                  </div>
-                  <DashboardScreen />
-                </figure>
-                <span className="cs-laptop-glare" aria-hidden="true" />
-              </div>
-            </div>
-            <div className="cs-laptop-base" aria-hidden="true" />
-          </div>
-          <figcaption className="cs-caption">
-            The sales command center — pipeline, follow-ups, shipment alerts, and revenue
-            in one scroll-free view. <em>All customer records shown are sample data.</em>
-          </figcaption>
-        </section>
-
-        <section className="cs-overview">
-          <div className="cs-overview-copy" data-reveal="left">
-            <span className="cs-section-kicker">The brief</span>
-            <h2>Replace six tools with one operating system for the business.</h2>
-            <p>
-              The team was fast on the phone and slow on the paperwork. Leads were tracked
-              in one place, orders in another, invoices in a third, and shipping status
-              nowhere at all. Every handoff between those systems was a re-typed record and
-              a chance to lose a sale.
+              carrier handoff, and payment follow-up.
             </p>
             <p>
-              We mapped the real path of a part — inquiry, quote, order, invoice, signature,
-              carrier, delivery, payment — and built a single application around that path.
-              The result is a CRM where the object that starts as a lead is the same object
-              that ends as a delivered, paid order.
-            </p>
-          </div>
-          <ul className="cs-stats">
-            {stats.map((stat) => (
-              <li key={stat.label} data-reveal="right">
-                <strong>{stat.value}</strong>
-                <b>{stat.label}</b>
-                <span>{stat.note}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="cs-problem">
-          <div className="cs-head" data-reveal="up">
-            <span className="cs-section-kicker">The challenge</span>
-            <h2>Four places where a sale quietly leaked.</h2>
-          </div>
-          <div className="cs-problem-grid">
-            {problems.map((problem, index) => (
-              <article key={problem.title} data-reveal="scale">
-                <span className="cs-problem-num">{String(index + 1).padStart(2, "0")}</span>
-                <h3>{problem.title}</h3>
-                <p>{problem.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="cs-flow">
-          <div className="cs-head" data-reveal="up">
-            <span className="cs-section-kicker">The approach</span>
-            <h2>We designed the workflow first, then the screens.</h2>
-            <p>
-              Eight states, one record. Each step below is a real status in the system, not a
-              diagram drawn after the fact.
-            </p>
-          </div>
-          <ol className="cs-flow-track">
-            {flow.map((item) => (
-              <li key={item.step} data-reveal="up">
-                <span className="cs-flow-step">{item.step}</span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="cs-seq-section" aria-labelledby="cs-seq-title">
-          <div className="cs-head" data-reveal="up">
-            <span className="cs-section-kicker">Product tour</span>
-            <h2 id="cs-seq-title">Six screens that do the whole job.</h2>
-            <p>
-              Every interface below is the shipped design, populated with sample records.
-              Keep scrolling to step through the workflow the way the team does.
-            </p>
-          </div>
-          <CrmScrollSequence />
-        </section>
-
-        <section className="cs-spotlight">
-          <div className="cs-spotlight-copy" data-reveal="left">
-            <span className="cs-section-kicker">Spotlight</span>
-            <h2>The invoice screen that ended the chasing.</h2>
-            <p>
-              The order view puts invoice generation, PDF download, editing, signature
-              requests, and fresh signing links in a single row of controls — and writes each
-              of those actions into the notes timeline beside it.
+              The team was fast on the phone and slow on the paperwork. Leads were tracked in
+              one place, orders in another, invoices in a third, and shipping status nowhere
+              at all. Every handoff between those systems was a re-typed record and a chance
+              to lose a sale.
             </p>
             <p>
-              When a customer says they never received the invoice, the answer is on screen:
-              who sent it, when it was re-sent, and when the last signing link was issued.
+              We designed and built the CRM that holds all of it on one record — from the
+              first inbound call to a signed invoice and a tracked delivery.
             </p>
-            <ul className="cs-check-list">
-              <li>Invoice state shown as a status chip, not buried in a sub-page</li>
-              <li>Signature requests re-sent without regenerating the document</li>
-              <li>Signing links reissued when a customer loses the email</li>
-              <li>Every event stamped with author and time on the same screen</li>
-            </ul>
-          </div>
-          <figure className="crm-frame cs-frame cs-frame-spotlight">
-            <div className="crm-frame-chrome" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-              <span>crm.meeautoparts.com/orders/MAP08042603</span>
-            </div>
-            <OrderDetailScreen />
-          </figure>
-        </section>
-
-        <section className="cs-system">
-          <div className="cs-head" data-reveal="up">
-            <span className="cs-section-kicker">Design system</span>
-            <h2>A visual language built for eight-hour shifts.</h2>
-          </div>
-
-          <div className="cs-system-grid">
-            <div className="cs-palette" data-reveal="left">
-              <h3>Palette</h3>
-              <ul>
-                {palette.map((swatch) => (
-                  <li key={swatch.hex}>
-                    <span className="cs-swatch" style={{ background: swatch.hex }} aria-hidden="true" />
-                    <div>
-                      <b>{swatch.name}</b>
-                      <code>{swatch.hex}</code>
-                      <small>{swatch.role}</small>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="cs-principles" data-reveal="right">
-              <h3>Interface principles</h3>
-              {principles.map((principle) => (
-                <article key={principle.title}>
-                  <h4>{principle.title}</h4>
-                  <p>{principle.body}</p>
-                </article>
-              ))}
-            </div>
           </div>
         </section>
 
-        <section className="cs-roles">
-          <div className="cs-head" data-reveal="up">
-            <span className="cs-section-kicker">Access model</span>
-            <h2>Three roles, three different applications.</h2>
+        {/* ---------------------------------------- the vision ------------ */}
+        <section className="cs-section" aria-labelledby="cs-vision-title">
+          <div className="cs-section-head">
+            <h2 id="cs-vision-title">The vision</h2>
+            <p data-reveal="up">
+              Replace six tools with one operating system for the business. We mapped the
+              real path of a part — inquiry, quote, order, invoice, signature, carrier,
+              delivery, payment — and built a single application around that path.
+            </p>
           </div>
-          <div className="cs-role-grid">
-            {roles.map((role) => (
-              <article key={role.name} data-reveal="scale">
-                <h3>{role.name}</h3>
-                <p>{role.body}</p>
-                <ul>
-                  {role.items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </section>
 
-        <section className="cs-quote">
-          <blockquote data-reveal="settle">
+          <blockquote className="cs-quote" data-reveal="up">
             <p>
               The measure of a CRM is not how much it can store. It is whether the person on
               the phone can see the next action without opening a second tab.
@@ -399,43 +225,148 @@ export default function AutoPartsCrmCaseStudy() {
           </blockquote>
         </section>
 
-        <section className="cs-results">
-          <div className="cs-head" data-reveal="up">
-            <span className="cs-section-kicker">The outcome</span>
-            <h2>What the team got.</h2>
+        {/* ---------------------------------------- sweating details ------ */}
+        <section className="cs-section" aria-labelledby="cs-details-title">
+          <div className="cs-section-head">
+            <h2 id="cs-details-title">Sweating the details</h2>
+            <p data-reveal="up">
+              A tool people live in for eight hours a day earns its keep in the small
+              decisions — where an action sits, what a colour means, how much a table can
+              carry before it stops being readable.
+            </p>
           </div>
+
+          <ol className="cs-principles">
+            {principles.map((principle) => (
+              <li key={principle.title} data-reveal="up">
+                <h3>{principle.title}</h3>
+                <p>{principle.body}</p>
+              </li>
+            ))}
+          </ol>
+
+          <div className="cs-palette" data-reveal="up">
+            <h3>Palette</h3>
+            <ul>
+              {palette.map((swatch) => (
+                <li key={swatch.hex}>
+                  <span className="cs-swatch" style={{ background: swatch.hex }} aria-hidden="true" />
+                  <b>{swatch.name}</b>
+                  <code>{swatch.hex}</code>
+                  <small>{swatch.role}</small>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <Stage
+            url="crm.meeautoparts.com/orders/MAP08042603"
+            caption="Invoice generation, PDF download, editing, signature requests, and fresh signing links sit in one row of controls — and every action writes to the timeline beside it."
+          >
+            <OrderDetailScreen />
+          </Stage>
+        </section>
+
+        {/* ---------------------------------------- old meets new --------- */}
+        <section className="cs-section" aria-labelledby="cs-old-new-title">
+          <div className="cs-section-head">
+            <h2 id="cs-old-new-title">Old meets new</h2>
+            <p data-reveal="up">
+              Four places where a sale quietly leaked, and what replaced each one.
+            </p>
+          </div>
+
+          <ul className="cs-compare">
+            {oldVsNew.map((item, index) => (
+              <li key={item.old} data-reveal="up">
+                <span className="cs-compare-num">{String(index + 1).padStart(2, "0")}</span>
+                <div className="cs-compare-old">
+                  <span className="cs-tag">Before</span>
+                  <h3>{item.old}</h3>
+                  <p>{item.oldBody}</p>
+                </div>
+                <div className="cs-compare-new">
+                  <span className="cs-tag is-now">Now</span>
+                  <p>{item.now}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <ol className="cs-flow" data-reveal="up" aria-label="Order lifecycle">
+            {flow.map((step, index) => (
+              <li key={step}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                {step}
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* ---------------------------------------- prototyping ----------- */}
+        <section className="cs-section" aria-labelledby="cs-proto-title">
+          <div className="cs-section-head">
+            <h2 id="cs-proto-title">Prototyping the possibilities</h2>
+            <p data-reveal="up">
+              Six screens do the whole job. Every interface below is the shipped design,
+              populated with sample records.
+            </p>
+          </div>
+
+          <div className="cs-screens">
+            {crmScreens.map((screen) => (
+              <article className="cs-screen" key={screen.id}>
+                <div className="cs-screen-copy" data-reveal="up">
+                  <span className="cs-tag">{screen.module}</span>
+                  <h3>{screen.title}</h3>
+                  <p>{screen.blurb}</p>
+                  <p className="cs-screen-detail">{screen.protects}</p>
+                </div>
+                <Stage url={screen.url}>{screen.stageNode || screen.node}</Stage>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ---------------------------------------- outcomes -------------- */}
+        <section className="cs-section" aria-labelledby="cs-outcomes-title">
+          <div className="cs-section-head">
+            <h2 id="cs-outcomes-title">Outcomes</h2>
+            <p data-reveal="up">What the team got.</p>
+          </div>
+
+          <ul className="cs-stats">
+            {stats.map((stat) => (
+              <li key={stat.label} data-reveal="up">
+                <strong>{stat.value}</strong>
+                <b>{stat.label}</b>
+                <span>{stat.note}</span>
+              </li>
+            ))}
+          </ul>
+
           <ul className="cs-outcome-list">
             {outcomes.map((outcome) => (
               <li key={outcome} data-reveal="up">
-                <span aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12.5l4 4 10-10" />
-                  </svg>
-                </span>
                 {outcome}
               </li>
             ))}
           </ul>
+
           <div className="cs-stack" data-reveal="up">
-            <span className="cs-section-kicker">Built with</span>
-            <div>
-              {stack.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
+            <span>Built with</span>
+            <p>{stack.join(" · ")}</p>
           </div>
         </section>
 
-        <section className="cs-cta" data-reveal="scale">
-          <div>
-            <span className="cs-section-kicker">Next</span>
-            <h2>Have a workflow that lives in six tools?</h2>
-            <p>
-              We design and build internal systems that hold an entire operation on one
-              record — from first inquiry to final payment.
-            </p>
-          </div>
-          <div className="cs-cta-actions">
+        {/* ---------------------------------------- close ----------------- */}
+        <section className="cs-next">
+          <h2>Have a workflow that lives in six tools?</h2>
+          <p>
+            We design and build internal systems that hold an entire operation on one
+            record — from first inquiry to final payment.
+          </p>
+          <div className="cs-next-actions">
             <Link href="/contact" className="about-btn-primary">
               Start a project {arrow}
             </Link>

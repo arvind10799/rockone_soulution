@@ -1,1470 +1,970 @@
 /* ============================================================================
-   Auto Parts CRM — case study page
-   Deep-navy editorial layout. The recreated CRM screens are the only bright
-   objects on the page, so they read as lit devices against the dark ground.
+   Auto Parts CRM — case study
+
+   Editorial register: near-white ground, very large display type, generous
+   vertical air, and full-bleed dark stages so the light CRM screenshots read
+   as lit devices. Motion is restrained — scroll reveals only.
    ========================================================================== */
 
 .cs-main {
-  --cs-gutter: max(24px, calc((100vw - 1240px) / 2));
-  --cs-wide: max(20px, calc((100vw - 1500px) / 2));
+  --cs-gutter: max(24px, calc((100vw - 1180px) / 2));
+  --cs-wide: max(20px, calc((100vw - 1480px) / 2));
+  --cs-measure: 62ch;
 
-  /* Dark token ladder — matches .about-cta / .site-footer elsewhere on the site. */
-  --cs-bg: #0b1220;
-  --cs-bg-lift: #12233c;
-  --cs-card: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.028));
-  --cs-card-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.045));
-  --cs-line: rgba(255, 255, 255, 0.1);
-  --cs-line-soft: rgba(255, 255, 255, 0.07);
-  --cs-heading: #ffffff;
-  --cs-body: rgba(255, 255, 255, 0.74);
-  --cs-muted: rgba(255, 255, 255, 0.5);
-  --cs-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.85);
+  --cs-paper: #fbfbf9;
+  --cs-ink: #0d0d0d;
+  --cs-body: #5a5a5a;
+  --cs-muted: #8b8b86;
+  --cs-rule: rgba(0, 0, 0, 0.11);
+  --cs-stage: #0b1220;
 
-  position: relative;
-  background: var(--cs-bg);
-  color: var(--cs-body);
-  /* `clip`, not `hidden`: `overflow-x: hidden` makes this a scroll container,
-     which silently breaks `position: sticky` for the sequence stage inside.
-     It also must not gain transform/filter/perspective — either would trap
-     the fixed .cs-ambient layer. */
+  background: var(--cs-paper);
+  color: var(--cs-ink);
   overflow-x: clip;
 }
 
-/* The global body background is light; without this, over-scroll rubber-banding
-   flashes white above and below the dark page. Scoped so no other route moves. */
-body:has(.cs-main) {
-  background: #0b1220;
-}
-
-/* The mobile tab bar is rendered by the root layout, outside this page's tree,
-   so it is reached the same way rather than by threading a prop through. */
-body:has(.cs-main) .mobile-tabbar {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(17, 27, 45, 0.88);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
-}
-
-body:has(.cs-main) .mobile-tab {
-  color: rgba(255, 255, 255, 0.6);
+.cs-main h1,
+.cs-main h2,
+.cs-main h3 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-weight: 700;
 }
 
 .cs-main section {
-  position: relative;
-  z-index: 1;
   padding-inline: var(--cs-gutter);
 }
 
-.cs-section-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--orange);
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
+/* Small uppercase label used for meta keys, tags, and the intro eyebrow. */
+.cs-eyebrow,
+.cs-tag,
+.cs-meta dt,
+.cs-stack span {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.cs-section-kicker::before {
-  content: "";
-  width: 30px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--orange), rgba(243, 90, 43, 0.15));
-}
+/* ------------------------------------------------------- title + meta ---- */
 
-.cs-head {
+.cs-title-block {
   display: grid;
-  gap: 16px;
-  max-width: 780px;
-  margin-bottom: clamp(34px, 4vw, 56px);
-}
-
-.cs-head h2,
-.cs-overview h2,
-.cs-spotlight h2,
-.cs-cta h2 {
-  margin: 0;
-  font-size: clamp(1.95rem, 3.4vw, 3.05rem);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1.08;
-}
-
-.cs-head p {
-  margin: 0;
-  color: var(--cs-muted);
-  font-size: clamp(1rem, 1.2vw, 1.12rem);
-  line-height: 1.7;
-}
-
-/* ---------------------------------------------------------------- the hero */
-
-.cs-hero {
-  position: relative;
-  padding-block: clamp(56px, 8vw, 104px) clamp(150px, 20vw, 260px);
-  background:
-    radial-gradient(60% 80% at 12% 0%, rgba(37, 99, 235, 0.28), transparent 62%),
-    radial-gradient(50% 70% at 88% 10%, rgba(124, 58, 237, 0.24), transparent 65%),
-    linear-gradient(180deg, #060b18 0%, #0a1226 55%, #0b1730 100%);
-  color: #ffffff;
-}
-
-.cs-hero::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 42%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(247, 250, 253, 0.06) 100%);
-  pointer-events: none;
-}
-
-/* ===========================================================================
-   .cs-ambient — the page-wide live background.
-
-   Fixed behind everything and scroll-persistent: drifting colour blobs, a
-   slowly panning dot mesh, and two light streaks. Transform/opacity only, so
-   it stays on the compositor. Adapted from the homepage `live-*` vocabulary
-   (globals.css) whose highlights are white additive light and therefore read
-   better on dark than they ever did on the light homepage.
-   ========================================================================= */
-
-.cs-ambient {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  contain: strict;
-}
-
-.cs-ambient-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(74px);
-  opacity: 0.42;
-  will-change: transform;
-}
-
-.cs-ambient-blob:nth-of-type(1) {
-  width: 46vw;
-  height: 46vw;
-  left: -10vw;
-  top: -12vw;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.6), transparent 68%);
-  animation: cs-drift-a 22s ease-in-out infinite;
-}
-
-.cs-ambient-blob:nth-of-type(2) {
-  width: 38vw;
-  height: 38vw;
-  right: -8vw;
-  top: -4vw;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.55), transparent 68%);
-  animation: cs-drift-b 26s ease-in-out infinite;
-}
-
-.cs-ambient-blob:nth-of-type(3) {
-  width: 34vw;
-  height: 34vw;
-  right: 16vw;
-  bottom: -14vw;
-  background: radial-gradient(circle, rgba(243, 90, 43, 0.34), transparent 70%);
-  animation: cs-drift-c 30s ease-in-out infinite;
-}
-
-.cs-ambient-blob:nth-of-type(4) {
-  width: 30vw;
-  height: 30vw;
-  left: 12vw;
-  bottom: -10vw;
-  background: radial-gradient(circle, rgba(16, 168, 223, 0.34), transparent 70%);
-  animation: cs-drift-b 34s ease-in-out infinite reverse;
-}
-
-/* Dot grid — the homepage version uses rgba(28,95,184,.18) strokes that vanish
-   on navy, so this one is white at low alpha instead. */
-.cs-ambient-mesh {
-  position: absolute;
-  inset: -20%;
-  background-image:
-    radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px),
-    linear-gradient(115deg, transparent 46%, rgba(255, 255, 255, 0.035) 50%, transparent 54%);
-  background-size: 46px 46px, 100% 100%;
-  opacity: 0.5;
-  animation: cs-mesh-pan 26s linear infinite;
-}
-
-.cs-ambient-streak {
-  position: absolute;
-  height: 1px;
-  width: 60vw;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.55),
-    rgba(16, 168, 223, 0.5),
-    rgba(243, 90, 43, 0.35),
-    transparent
-  );
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.cs-ambient-streak:nth-of-type(5) {
-  top: 26%;
-  left: -60vw;
-  animation: cs-streak 13s ease-in-out infinite;
-}
-
-.cs-ambient-streak:nth-of-type(6) {
-  top: 68%;
-  left: -60vw;
-  transform: rotate(-2deg);
-  animation: cs-streak 17s ease-in-out 5s infinite;
-}
-
-@keyframes cs-drift-a {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(6vw, 5vh, 0) scale(1.12);
-  }
-}
-
-@keyframes cs-drift-b {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1.05);
-  }
-  50% {
-    transform: translate3d(-7vw, 6vh, 0) scale(0.92);
-  }
-}
-
-@keyframes cs-drift-c {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(0.95);
-  }
-  50% {
-    transform: translate3d(-5vw, -6vh, 0) scale(1.15);
-  }
-}
-
-@keyframes cs-mesh-pan {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(46px, 46px, 0);
-  }
-}
-
-@keyframes cs-streak {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
-  }
-  12% {
-    opacity: 0.85;
-  }
-  60% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(190vw, 0, 0);
-  }
-}
-
-.cs-hero-inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: 22px;
-  max-width: 1120px;
-}
-
-/* ------------------------------------------------- hero entrance sequence */
-
-.cs-crumbs,
-.cs-kicker,
-.cs-lede,
-.cs-meta > div {
-  opacity: 0;
-  animation: cs-rise-in 760ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.cs-crumbs {
-  animation-delay: 60ms;
-}
-
-.cs-kicker {
-  animation-delay: 150ms;
-}
-
-.cs-lede {
-  animation-delay: 620ms;
-}
-
-.cs-meta > div {
-  animation-delay: calc(760ms + var(--meta-index, 0) * 70ms);
-}
-
-/* Each headline line rises out of its own mask. */
-.cs-hero-line {
-  display: block;
-  overflow: hidden;
-  padding-bottom: 0.06em;
-}
-
-.cs-hero-line > span {
-  display: block;
-  transform: translateY(105%);
-  animation: cs-line-in 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: calc(260ms + var(--line, 0) * 110ms);
-}
-
-@keyframes cs-rise-in {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 22px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes cs-line-in {
-  to {
-    transform: none;
-  }
+  gap: clamp(28px, 4vw, 52px);
+  padding-block: clamp(40px, 7vw, 92px) clamp(28px, 4vw, 48px);
 }
 
 .cs-crumbs {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--cs-muted);
   font-size: 0.86rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .cs-crumbs a:hover {
-  color: #ffffff;
+  color: var(--cs-ink);
 }
 
-.cs-crumbs strong {
-  color: rgba(255, 255, 255, 0.92);
-  font-weight: 700;
-}
-
-.cs-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  width: max-content;
-  padding: 8px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
-  font-size: 0.72rem;
-  font-weight: 750;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.cs-kicker::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--orange);
-  box-shadow: 0 0 0 4px rgba(243, 90, 43, 0.22);
-}
-
-.cs-hero h1 {
+.cs-title-block h1 {
   margin: 0;
-  /* Sized so each masked line stays on one row — a wrapped line would rise
-     out of the middle of the mask instead of from beneath it. */
-  max-width: 1010px;
-  color: #ffffff;
-  font-size: clamp(1.95rem, 4.2vw, 3.55rem);
-  font-weight: 800;
-  letter-spacing: -0.042em;
-  line-height: 1.06;
-}
-
-.cs-lede {
-  margin: 0;
-  max-width: 66ch;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: clamp(1.02rem, 1.35vw, 1.22rem);
-  line-height: 1.75;
+  max-width: 14ch;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  letter-spacing: -0.045em;
+  line-height: 0.94;
 }
 
 .cs-meta {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 26px 32px;
-  margin: 22px 0 0;
-  padding-top: 34px;
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 28px 40px;
+  margin: 0;
+  padding-top: clamp(24px, 3vw, 40px);
+  border-top: 1px solid var(--cs-rule);
 }
 
 .cs-meta div {
   display: grid;
-  gap: 8px;
+  gap: 10px;
+  align-content: start;
 }
 
 .cs-meta dt {
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 0.7rem;
-  font-weight: 750;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  color: var(--cs-muted);
 }
 
 .cs-meta dd {
   margin: 0;
-  color: #ffffff;
-  font-size: 0.98rem;
-  font-weight: 600;
+  color: var(--cs-ink);
+  font-size: 1rem;
+  font-weight: 500;
   line-height: 1.5;
 }
 
-/* ------------------------------------------------------------ hero product */
+/* ------------------------------------------------------------- stages ---- */
 
-.cs-showcase {
+/* ===========================================================================
+   Hero: the CRM running on an angled desktop display.
+
+   Full-bleed near-black band with a glow behind the monitor, so the light CRM
+   UI reads as a lit screen — the same contrast trick the .cs-stage panels use
+   further down the page.
+   ========================================================================= */
+
+.cs-hero-media {
   position: relative;
+  overflow: hidden;
+  padding: 0 var(--cs-wide) !important;
+  background:
+    radial-gradient(58% 62% at 50% 34%, rgba(37, 99, 235, 0.2), transparent 68%),
+    radial-gradient(40% 46% at 82% 74%, rgba(124, 58, 237, 0.16), transparent 70%),
+    linear-gradient(180deg, #05070d 0%, #0a0f1c 52%, #06080f 100%);
+}
+
+/* The display owns exactly one viewport; the caption deliberately falls below
+   the fold so it never steals height from the monitor. `svh` rather than `vh`
+   so a collapsing mobile URL bar does not resize it mid-scroll. */
+.cs-hero-media > .cs-reel {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  /* Clears the sticky 92px header, which overlays the top of the band and was
+     cutting off the monitor's bezel. */
+  padding-top: 92px;
+  padding-bottom: clamp(28px, 4vh, 52px);
+}
+
+/* Inside the hero monitor, the screens use a dedicated slower drift so the
+   full dashboard is visible over one animation cycle. The general rule at
+   line ~184 sets 1.18× overflow + 12% pan; the hero gets 1.35× + 22% pan
+   so the deeper dashboard content is fully revealed. */
+.cs-hero-media .cs-monitor-screen .cm-app {
+  min-height: calc((100cqh - 34px) * 1.35);
+  animation: cs-hero-drift 22s ease-in-out infinite;
+}
+
+@keyframes cs-hero-drift {
+  0%, 8% {
+    transform: translateY(0);
+  }
+  48%, 52% {
+    transform: translateY(calc((100cqh - 34px) * -0.22));
+  }
+  92%, 100% {
+    transform: translateY(0);
+  }
+}
+
+.cs-monitor {
+  /* The screen is 16:10, so its height is width / 1.6. Solve for the width that
+     keeps screen + chin + neck + foot inside what one viewport leaves after the
+     header, the band padding, and the legend row: ~300px in total. */
+  width: min(1180px, 100%, calc((100svh - 260px) * 1.6));
+  margin: 0 auto;
+  /* Depth for the tilt. Without perspective a rotateY reads as a squash. */
+  perspective: 2200px;
+  perspective-origin: 62% 42%;
+}
+
+.cs-monitor-body {
+  position: relative;
+  padding: clamp(9px, 1vw, 15px);
+  border-radius: clamp(10px, 1.1vw, 16px);
+  background: linear-gradient(158deg, #3d4759 0%, #232b3a 42%, #161c27 100%);
+  box-shadow:
+    0 60px 130px -40px rgba(0, 0, 0, 0.95),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  /* Subtle on purpose: this UI is dense tables, and a steep angle makes them
+     unreadable. Enough rotation to sit in space, not enough to obscure. */
+  transform: rotateY(-7deg) rotateX(2deg);
+  transform-style: preserve-3d;
+}
+
+.cs-monitor-screen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  container-type: size;
+  overflow: hidden;
+  border-radius: clamp(4px, 0.5vw, 7px);
+  background: #05070d;
+}
+
+/* The cm-app now fills the aspect-ratio panel at natural scale. A gentle
+   drift reveals the lower portion of longer screens. Short screens
+   (dashboard) get min-height: 0 from the hero-specific override so they
+   sit flush instead of panning over empty space. */
+.cs-monitor-screen .cm-app {
+  min-height: calc((100cqh - 34px) * 1.18);
+  animation: cs-screen-drift 18s ease-in-out infinite;
+}
+
+/* A slow, shallow drift — 12% translation against 18% guaranteed overflow
+   keeps the bottom never visible. */
+@keyframes cs-screen-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(calc((100cqh - 34px) * -0.12));
+  }
+}
+
+.cs-reel-screen,
+.cs-reel-frame {
+  height: 100%;
+}
+
+.cs-monitor-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.02) 28%,
+    transparent 54%
+  );
+  pointer-events: none;
+}
+
+.cs-monitor-chin {
+  height: clamp(16px, 1.8vw, 26px);
+  display: grid;
+  place-items: center;
+}
+
+.cs-monitor-chin span {
+  width: 42px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.cs-monitor-neck {
+  width: clamp(70px, 8vw, 104px);
+  height: clamp(26px, 3vw, 44px);
+  margin: 0 auto;
+  background: linear-gradient(180deg, #2a3244 0%, #1a2130 100%);
+  clip-path: polygon(16% 0, 84% 0, 100% 100%, 0 100%);
+}
+
+.cs-monitor-foot {
+  width: clamp(180px, 20vw, 280px);
+  height: clamp(8px, 0.9vw, 12px);
+  margin: 0 auto;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(180deg, #39435800 0%, #2b3346 22%, #141a25 100%);
+  box-shadow: 0 26px 40px -18px rgba(0, 0, 0, 0.9);
+}
+
+/* ------------------------------------------------------------- the reel --- */
+
+.cs-reel {
+  display: grid;
+  gap: 0;
+}
+
+.cs-reel-screens {
+  position: relative;
+  display: grid;
+}
+
+/* Video-like cinematic crossfade — slow opacity + gentle scale creates the
+   feeling of a live product walkthrough rather than a slideshow. */
+.cs-reel-screen {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: scale(1.018);
+  filter: blur(2px);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1400ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
+}
+
+.cs-reel-screen.is-active {
+  opacity: 1;
+  transform: none;
+  filter: blur(0px);
   z-index: 2;
-  margin-top: clamp(-230px, -18vw, -130px);
-  padding-inline: var(--cs-wide) !important;
-  padding-bottom: clamp(48px, 6vw, 80px);
+}
+
+.cs-reel-frame {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Pointer drifts toward the sidebar and pulses a click before each switch.
+   Re-keyed per screen in the component so the animation restarts. */
+.cs-reel-cursor {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
+  animation: cs-cursor-path 3800ms cubic-bezier(0.5, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+.cs-reel-cursor svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes cs-cursor-path {
+  0% {
+    opacity: 0;
+    transform: translate3d(58%, 62%, 0) scale(1);
+  }
+  12% {
+    opacity: 1;
+  }
+  55% {
+    transform: translate3d(30%, 48%, 0) scale(1);
+  }
+  86% {
+    opacity: 1;
+    transform: translate3d(7%, 33%, 0) scale(1);
+  }
+  92% {
+    transform: translate3d(7%, 33%, 0) scale(0.82);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(7%, 33%, 0) scale(1);
+  }
+}
+
+.cs-reel-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1120px, 100%);
+  margin: clamp(26px, 3vw, 40px) auto 0;
+}
+
+.cs-reel-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.cs-reel-label span {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.cs-reel-pips {
+  display: flex;
+  gap: 7px;
+}
+
+.cs-reel-pips button {
+  position: relative;
+  width: 26px;
+  height: 3px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 320ms ease, width 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Already-played pips fill solid */
+.cs-reel-pips button.is-done {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.cs-reel-pips button.is-active {
+  width: 48px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Progress bar that fills left→right like a video timeline */
+.cs-pip-progress {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  transform-origin: left center;
+  animation: cs-pip-fill linear forwards;
+}
+
+@keyframes cs-pip-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.cs-stage {
+  padding: clamp(16px, 2.4vw, 40px);
+  border-radius: clamp(16px, 2vw, 28px);
+  background: var(--cs-stage);
 }
 
 .cs-frame {
   margin: 0;
 }
 
-/* ===========================================================================
-   Hero device — an open laptop, drawn in CSS.
-
-   The lid holds a 16:10 screen that is a *size* container, so the mock inside
-   can be sized off both width and height. Everything in the mock is `em` off
-   one root font-size, so fitting the whole dashboard is a font-size problem,
-   not a transform problem: `min()` takes whichever of width-fit, height-fit,
-   or the normal cap is smallest.
-
-   81 is the DashboardScreen's measured content height in `em` (80.76 at 1400px
-   / 13px root, plus a hair of slack). A smaller root font makes the container
-   wider in `em`, so text wraps less and the real height only drops — 81 is a
-   safe upper bound. 34px is .crm-frame-chrome's fixed height.
-   ========================================================================= */
-
-.cs-laptop {
-  /* Also bounded by height so the whole machine clears the fold:
-     screen height = width x 0.625, plus lid padding and base. */
-  width: min(1060px, 100%, calc((78vh - 46px) / 0.625));
-  margin: 0 auto;
-}
-
-.cs-laptop-lid {
-  position: relative;
-  padding: 14px 14px 0;
-  border-radius: 18px 18px 5px 5px;
-  background: linear-gradient(180deg, #39445a 0%, #232c3d 55%, #1a2130 100%);
-  box-shadow:
-    0 44px 100px -34px rgba(0, 0, 0, 0.9),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
-}
-
-/* Camera dot in the top bezel. */
-.cs-laptop-lid::before {
-  content: "";
-  position: absolute;
-  top: 6px;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.28);
-  transform: translateX(-50%);
-}
-
-.cs-laptop-screen {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  container-type: size;
+/* Product screens inside the stage frame. Show 100% of image and mock content
+   without clipping or cropping at the bottom. */
+.cs-stage .crm-frame {
+  height: auto;
+  min-height: 0;
   overflow: hidden;
-  border-radius: 7px 7px 0 0;
-  background: #05070d;
 }
 
-.cs-laptop-screen .cs-frame-hero {
-  height: 100%;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
+.cs-stage .cm-screen-img {
+  height: auto;
+  object-fit: contain;
 }
 
-.cs-laptop-screen .cm-app {
-  font-size: min(1.13cqw, calc((100cqh - 34px) / 81), 13px);
+/* Inside section stages, fit the app container so full content is visible. */
+.cs-stage .cm-app {
+  min-height: 0;
+  height: auto;
+  animation: none;
 }
 
-/* Soft diagonal reflection across the glass. */
-.cs-laptop-glare {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    122deg,
-    rgba(255, 255, 255, 0.11) 0%,
-    rgba(255, 255, 255, 0.03) 26%,
-    transparent 52%
-  );
-  pointer-events: none;
-}
-
-.cs-laptop-base {
-  position: relative;
-  width: 114%;
-  height: 15px;
-  margin: 0 -7%;
-  border-radius: 0 0 13px 13px;
-  background: linear-gradient(180deg, #4c576e 0%, #2b3446 42%, #171d2a 100%);
-  box-shadow: 0 30px 44px -22px rgba(0, 0, 0, 0.9);
-}
-
-/* Thumb notch. */
-.cs-laptop-base::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 13%;
-  height: 6px;
-  border-radius: 0 0 7px 7px;
-  background: rgba(0, 0, 0, 0.42);
-  transform: translateX(-50%);
-}
-
-/* ---------------------------------------------------------------------------
-   Scroll-linked device shots.
-
-   Progressive enhancement: browsers with scroll-driven animations tie the
-   device entrance and drift to scroll position. Everywhere else the frames
-   simply render at rest — nothing is hidden behind an unsupported feature.
-   --------------------------------------------------------------------------- */
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .cs-showcase {
-      /* rotateX needs depth to read as a tilt rather than a squash. */
-      perspective: 1600px;
-    }
-
-    /* The whole laptop tilts in as one object, not just the screen. */
-    .cs-laptop,
-    .cs-frame-spotlight {
-      animation: cs-device-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 42%;
-      transform-origin: 50% 100%;
-    }
-
-    /* Slow drift while the frame crosses the viewport. */
-    .cs-seq-stage {
-      animation: cs-stage-drift linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
+@keyframes cs-stage-scroll {
+  0%, 12% {
+    transform: translateY(0);
+  }
+  45%, 55% {
+    transform: translateY(-15%);
+  }
+  88%, 100% {
+    transform: translateY(0);
   }
 }
 
-@keyframes cs-device-in {
-  from {
-    opacity: 0;
-    transform: translateY(56px) scale(0.94) rotateX(7deg);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes cs-stage-drift {
-  from {
-    transform: translateY(14px);
-  }
-  to {
-    transform: translateY(-14px);
-  }
-}
-
-.cs-caption em {
-  color: rgba(255, 255, 255, 0.38);
-  font-style: normal;
-}
-
-.cs-caption {
-  max-width: 640px;
-  margin: 22px auto 0;
-  color: var(--cs-muted);
+.cs-stage-caption {
+  max-width: var(--cs-measure);
+  margin: clamp(18px, 2vw, 26px) auto 0;
+  color: rgba(255, 255, 255, 0.55);
   font-size: 0.92rem;
   line-height: 1.65;
   text-align: center;
 }
 
-/* ------------------------------------------------------------- the brief */
+/* Sits just past the fold under the full-height display. */
+.cs-hero-media > .cs-stage-caption {
+  padding-bottom: clamp(48px, 7vh, 96px);
+}
 
-.cs-overview {
+/* -------------------------------------------------------- introduction --- */
+
+.cs-intro {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-  gap: clamp(34px, 5vw, 80px);
+  grid-template-columns: minmax(0, 0.3fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 72px);
   align-items: start;
-  padding-block: clamp(52px, 7vw, 96px);
+  padding-block: clamp(60px, 9vw, 140px);
+  border-top: 1px solid var(--cs-rule);
 }
 
-.cs-overview-copy {
-  display: grid;
-  gap: 20px;
-}
-
-.cs-overview-copy p {
+.cs-eyebrow {
   margin: 0;
-  color: var(--cs-body);
-  font-size: clamp(1rem, 1.15vw, 1.1rem);
-  line-height: 1.8;
-}
-
-.cs-stats {
-  display: grid;
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.cs-stats li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: baseline;
-  gap: 6px 18px;
-  padding: 22px;
-  border: 1px solid var(--cs-line);
-  border-radius: 18px;
-  background: var(--cs-card);
-  box-shadow: var(--cs-shadow);
-}
-
-.cs-stats strong {
-  grid-row: span 2;
-  color: var(--blue);
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-
-.cs-stats b {
-  color: var(--cs-heading);
-  font-size: 1rem;
-  font-weight: 750;
-}
-
-.cs-stats span {
   color: var(--cs-muted);
-  font-size: 0.88rem;
-  line-height: 1.55;
 }
 
-/* ---------------------------------------------------------- the challenge */
-
-.cs-problem {
-  padding-block: clamp(52px, 7vw, 96px);
-  background: rgba(18, 35, 60, 0.55);
-  border-block: 1px solid var(--cs-line-soft);
-}
-
-.cs-problem-grid {
+.cs-intro-body {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  gap: 22px;
+  max-width: var(--cs-measure);
 }
 
-.cs-problem-grid article {
+.cs-intro-body p {
+  margin: 0;
+  color: var(--cs-body);
+  font-size: clamp(1.02rem, 1.15vw, 1.12rem);
+  line-height: 1.78;
+}
+
+.cs-lede {
+  color: var(--cs-ink) !important;
+  font-size: clamp(1.32rem, 2.2vw, 1.85rem) !important;
+  font-weight: 500;
+  letter-spacing: -0.018em;
+  line-height: 1.42 !important;
+}
+
+/* --------------------------------------------------------- sections ------ */
+
+.cs-section {
+  padding-block: clamp(70px, 11vw, 170px);
+  border-top: 1px solid var(--cs-rule);
+}
+
+.cs-section-head {
   display: grid;
-  gap: 12px;
-  align-content: start;
-  padding: 28px 26px;
-  border: 1px solid var(--cs-line);
-  border-radius: 20px;
-  background: var(--cs-card);
-  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+  gap: 22px;
+  max-width: 860px;
+  margin-bottom: clamp(40px, 6vw, 84px);
 }
 
-.cs-problem-grid article[data-reveal].is-visible {
-  /* Re-assert a short transition so hover does not inherit the 720ms reveal. */
-  transition: transform 220ms ease, box-shadow 220ms ease;
+.cs-section-head h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  letter-spacing: -0.038em;
+  line-height: 1.04;
 }
 
-.cs-problem-grid article:hover {
-  transform: translateY(-4px);
-  background: var(--cs-card-hover);
-  box-shadow: var(--cs-shadow);
+.cs-section-head p {
+  margin: 0;
+  max-width: var(--cs-measure);
+  color: var(--cs-body);
+  font-size: clamp(1.05rem, 1.3vw, 1.22rem);
+  line-height: 1.72;
 }
 
-.cs-problem-num {
-  color: var(--orange);
+/* -------------------------------------------------------------- quote ---- */
+
+.cs-quote {
+  max-width: 940px;
+  margin: 0;
+  padding-top: clamp(30px, 4vw, 56px);
+  border-top: 1px solid var(--cs-rule);
+}
+
+.cs-quote p {
+  margin: 0 0 20px;
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2.35rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.24;
+}
+
+.cs-quote cite {
+  color: var(--cs-muted);
   font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-}
-
-.cs-problem-grid h3,
-.cs-role-grid h3 {
-  margin: 0;
-  color: var(--cs-heading);
-  font-size: 1.16rem;
-  font-weight: 750;
-  letter-spacing: -0.02em;
-}
-
-.cs-problem-grid p,
-.cs-role-grid p {
-  margin: 0;
-  color: var(--cs-body);
-  font-size: 0.95rem;
-  line-height: 1.7;
-}
-
-/* --------------------------------------------------------------- the flow */
-
-.cs-flow {
-  padding-block: clamp(52px, 7vw, 96px);
-}
-
-.cs-flow-track {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
-  gap: 18px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: flow;
-}
-
-.cs-flow-track li {
-  position: relative;
-  display: grid;
-  gap: 10px;
-  align-content: start;
-  padding: 24px 22px;
-  border: 1px solid var(--cs-line);
-  border-radius: 18px;
-  background: var(--cs-card);
-}
-
-@media (min-width: 1000px) {
-  .cs-flow-track {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .cs-flow-track li:nth-child(4)::after {
-    display: none;
-  }
-}
-
-.cs-flow-track li::after {
-  content: "";
-  position: absolute;
-  top: 34px;
-  right: -13px;
-  width: 8px;
-  height: 8px;
-  border-top: 2px solid rgba(255, 255, 255, 0.3);
-  border-right: 2px solid rgba(255, 255, 255, 0.3);
-  transform: rotate(45deg);
-  /* Chevrons appear only once their step has landed. */
-  opacity: 0;
-  transition: opacity 340ms ease;
-  transition-delay: calc(var(--reveal-index, 0) * 80ms + 260ms);
-}
-
-.cs-flow-track li.is-visible::after {
-  opacity: 1;
-}
-
-.cs-flow-track li:last-child::after {
-  display: none;
-}
-
-.cs-flow-step {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: rgba(37, 99, 235, 0.2);
-  color: #93b4ff;
-  font-size: 0.8rem;
-  font-weight: 800;
-}
-
-.cs-flow-track h3 {
-  margin: 0;
-  color: var(--cs-heading);
-  font-size: 1.02rem;
-  font-weight: 750;
-}
-
-.cs-flow-track p {
-  margin: 0;
-  color: var(--cs-body);
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
-
-/* --------------------------------------------------------- product tour */
-
-/* ============================================================ the sequence
-   A sticky device stage beside six scrolling chapters. Pinning is pure CSS;
-   CrmScrollSequence only decides which screen is active.
-   ========================================================================= */
-
-.cs-seq-section {
-  padding-block: clamp(52px, 7vw, 96px) clamp(60px, 8vw, 110px);
-  padding-inline: var(--cs-wide) !important;
-  background:
-    radial-gradient(50% 60% at 20% 0%, rgba(37, 99, 235, 0.14), transparent 65%),
-    rgba(18, 35, 60, 0.5);
-  border-block: 1px solid var(--cs-line-soft);
-}
-
-.cs-seq-section .cs-head {
-  padding-inline: max(0px, calc(var(--cs-gutter) - var(--cs-wide)));
-}
-
-.cs-seq {
-  display: grid;
-  grid-template-columns: minmax(0, 1.32fr) minmax(300px, 0.68fr);
-  gap: clamp(24px, 3vw, 56px);
-  /* Deliberately NOT `align-items: start` — the stage column has to stretch to
-     the full height of the chapter list, or `sticky` has nowhere to travel. */
-}
-
-.cs-seq-stage-col {
-  position: relative;
-}
-
-.cs-seq-stage {
-  position: sticky;
-  top: clamp(88px, 11vh, 120px);
-  display: grid;
-  gap: 14px;
-}
-
-.cs-seq-frames {
-  position: relative;
-  /* All six screens stack here; the active one fades to the front. */
-  display: grid;
-  /* Crop like a screenshot rather than overflowing the viewport. */
-  max-height: calc(100vh - 230px);
-  overflow: hidden;
-  border-radius: clamp(10px, 1.2vw, 18px);
-}
-
-.cs-seq-frame {
-  grid-area: 1 / 1;
-  opacity: 0;
-  transform: scale(0.975) translateY(14px);
-  transition:
-    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
-}
-
-.cs-seq-frame.is-active {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-}
-
-.cs-seq-legend {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding-inline: 4px;
-}
-
-.cs-seq-stage-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0;
-  color: var(--cs-body);
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.cs-seq-stage-label span {
-  color: #7fa6ff;
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.cs-seq-ticks {
-  display: flex;
-  gap: 6px;
-}
-
-.cs-seq-ticks span {
-  width: 22px;
-  height: 3px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
-  transition: background 320ms ease, width 320ms ease;
-}
-
-.cs-seq-ticks span.is-active {
-  width: 34px;
-  background: linear-gradient(90deg, var(--blue), var(--cyan));
-}
-
-.cs-seq-chapters {
-  display: grid;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.cs-seq-chapter {
-  display: grid;
-  align-content: center;
-  gap: 10px;
-  /* Each chapter fills roughly a screen so the stage holds while it is read. */
-  min-height: min(78vh, 640px);
-  padding-block: clamp(28px, 5vh, 56px);
-  opacity: 0.32;
-  transition: opacity 420ms ease;
-}
-
-.cs-seq-chapter.is-active {
-  opacity: 1;
-}
-
-.cs-seq-num {
-  color: #7fa6ff;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-}
-
-.cs-seq-module {
-  width: max-content;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.22);
-  color: #93b4ff;
-  font-size: 0.7rem;
-  font-weight: 800;
+  font-style: normal;
+  font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.cs-seq-chapter h3 {
-  margin: 4px 0 0;
-  color: var(--cs-heading);
-  font-size: clamp(1.35rem, 2.3vw, 1.95rem);
-  font-weight: 800;
-  letter-spacing: -0.028em;
-  line-height: 1.16;
+/* --------------------------------------------------------- principles ---- */
+
+.cs-principles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(28px, 3.5vw, 56px);
+  margin: 0 0 clamp(50px, 7vw, 100px);
+  padding: 0;
+  list-style: none;
+  counter-reset: principle;
 }
 
-.cs-seq-chapter p {
+.cs-principles li {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding-top: 22px;
+  border-top: 1px solid var(--cs-rule);
+  counter-increment: principle;
+}
+
+.cs-principles li::before {
+  content: counter(principle, decimal-leading-zero);
+  color: var(--cs-muted);
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+}
+
+.cs-principles h3 {
+  margin: 0;
+  font-size: 1.16rem;
+  letter-spacing: -0.018em;
+  line-height: 1.32;
+}
+
+.cs-principles p {
   margin: 0;
   color: var(--cs-body);
-  font-size: 1.02rem;
+  font-size: 0.98rem;
   line-height: 1.72;
 }
 
-.cs-seq-protects {
-  margin-top: 6px !important;
-  padding-left: 18px;
-  border-left: 2px solid var(--cs-line);
-  color: var(--cs-muted) !important;
-  font-size: 0.95rem !important;
+/* ------------------------------------------------------------ palette ---- */
+
+.cs-palette {
+  margin-bottom: clamp(50px, 7vw, 100px);
 }
 
-/* ------------------------------------------------------------ spotlight */
-
-.cs-spotlight {
-  display: grid;
-  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1.22fr);
-  gap: clamp(30px, 4vw, 64px);
-  align-items: center;
-  padding-block: clamp(52px, 7vw, 96px);
-  padding-inline: var(--cs-gutter) var(--cs-wide) !important;
-  background:
-    radial-gradient(50% 70% at 90% 20%, rgba(124, 58, 237, 0.16), transparent 62%),
-    linear-gradient(180deg, #070d1c, #0b1730);
-  color: #ffffff;
-}
-
-.cs-spotlight-copy {
-  display: grid;
-  gap: 18px;
-}
-
-.cs-spotlight-copy p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 1.02rem;
-  line-height: 1.78;
-}
-
-.cs-check-list {
-  display: grid;
-  gap: 12px;
-  margin: 6px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.cs-check-list li {
-  position: relative;
-  padding-left: 30px;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 0.96rem;
-  line-height: 1.6;
-}
-
-.cs-check-list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 7px;
-  width: 16px;
-  height: 9px;
-  border-left: 2px solid #4ade80;
-  border-bottom: 2px solid #4ade80;
-  transform: rotate(-45deg);
-}
-
-.cs-frame-spotlight {
-  box-shadow: 0 60px 120px -46px rgba(0, 0, 0, 0.8);
-}
-
-/* -------------------------------------------------------- design system */
-
-.cs-system {
-  padding-block: clamp(52px, 7vw, 96px);
-}
-
-.cs-system-grid {
-  display: grid;
-  grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(28px, 4vw, 60px);
-  align-items: start;
-}
-
-.cs-system h3 {
-  margin: 0 0 20px;
-  color: var(--cs-heading);
-  font-size: 1.24rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.cs-palette h3 {
+  margin: 0 0 24px;
+  font-size: 1.16rem;
+  letter-spacing: -0.018em;
 }
 
 .cs-palette ul {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 24px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .cs-palette li {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 16px;
-  border: 1px solid var(--cs-line);
-  border-radius: 16px;
-  background: var(--cs-card);
+  display: grid;
+  gap: 6px;
 }
 
 .cs-swatch {
-  width: 44px;
-  height: 44px;
-  flex: none;
+  height: 76px;
+  margin-bottom: 8px;
   border-radius: 12px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.09);
 }
 
 .cs-palette b {
-  display: block;
-  color: var(--cs-heading);
   font-size: 0.98rem;
-  font-weight: 750;
+  font-weight: 600;
 }
 
 .cs-palette code {
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 0.82rem;
-  font-weight: 600;
+  color: var(--cs-muted);
+  font-size: 0.8rem;
   letter-spacing: 0.04em;
 }
 
 .cs-palette small {
-  display: block;
-  margin-top: 2px;
-  color: var(--cs-muted);
-  font-size: 0.85rem;
+  color: var(--cs-body);
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
-.cs-principles {
+/* ------------------------------------------------------- old meets new --- */
+
+.cs-compare {
   display: grid;
   gap: 0;
-}
-
-.cs-principles article {
-  padding: 24px 0;
-  border-top: 1px solid var(--cs-line-soft);
-}
-
-.cs-principles article:last-child {
-  border-bottom: 1px solid var(--cs-line-soft);
-}
-
-.cs-principles h4 {
-  margin: 0 0 8px;
-  color: var(--cs-heading);
-  font-size: 1.08rem;
-  font-weight: 750;
-  letter-spacing: -0.015em;
-}
-
-.cs-principles p {
-  margin: 0;
-  color: var(--cs-body);
-  font-size: 0.96rem;
-  line-height: 1.72;
-}
-
-/* ---------------------------------------------------------------- roles */
-
-.cs-roles {
-  padding-block: clamp(52px, 7vw, 96px);
-  background: rgba(18, 35, 60, 0.55);
-  border-block: 1px solid var(--cs-line-soft);
-}
-
-.cs-role-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.cs-role-grid article {
-  display: grid;
-  gap: 14px;
-  align-content: start;
-  padding: 30px 28px;
-  border: 1px solid var(--cs-line);
-  border-radius: 22px;
-  background: var(--cs-card);
-}
-
-.cs-role-grid h3 {
-  font-size: 1.3rem;
-}
-
-.cs-role-grid ul {
-  display: grid;
-  gap: 9px;
-  margin: 4px 0 0;
+  margin: 0 0 clamp(50px, 7vw, 90px);
   padding: 0;
   list-style: none;
 }
 
-.cs-role-grid li {
-  position: relative;
-  padding-left: 22px;
-  color: var(--cs-body);
-  font-size: 0.93rem;
+.cs-compare li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 52px);
+  align-items: start;
+  padding-block: clamp(28px, 3.4vw, 44px);
+  border-top: 1px solid var(--cs-rule);
 }
 
-.cs-role-grid li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 8px;
-  height: 8px;
-  border-radius: 3px;
-  background: linear-gradient(135deg, var(--blue), var(--cyan));
+.cs-compare li:last-child {
+  border-bottom: 1px solid var(--cs-rule);
 }
 
-/* ---------------------------------------------------------------- quote */
-
-.cs-quote {
-  padding-block: clamp(56px, 8vw, 110px);
-}
-
-.cs-quote blockquote {
-  max-width: 940px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.cs-quote p {
-  margin: 0 0 22px;
-  color: var(--cs-heading);
-  font-size: clamp(1.5rem, 3.1vw, 2.5rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.26;
-}
-
-.cs-quote cite {
+.cs-compare-num {
   color: var(--cs-muted);
-  font-size: 0.86rem;
-  font-style: normal;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
 }
 
-/* -------------------------------------------------------------- outcome */
+.cs-compare-old,
+.cs-compare-new {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
 
-.cs-results {
-  padding-block: clamp(52px, 7vw, 96px);
-  border-top: 1px solid var(--cs-line-soft);
+.cs-tag {
+  width: max-content;
+  color: var(--cs-muted);
+}
+
+.cs-tag.is-now {
+  color: var(--orange);
+}
+
+.cs-compare h3 {
+  margin: 0;
+  font-size: clamp(1.14rem, 1.7vw, 1.4rem);
+  letter-spacing: -0.022em;
+  line-height: 1.28;
+}
+
+.cs-compare p {
+  margin: 0;
+  color: var(--cs-body);
+  font-size: 0.98rem;
+  line-height: 1.72;
+}
+
+.cs-compare-new p {
+  color: var(--cs-ink);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+/* Compressed lifecycle strip — replaces the old eight-card grid. */
+.cs-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cs-flow li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 999px;
+  color: var(--cs-ink);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.cs-flow span {
+  color: var(--cs-muted);
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+/* ------------------------------------------------------------ screens ---- */
+
+.cs-screens {
+  display: grid;
+  gap: clamp(52px, 7vw, 104px);
+}
+
+.cs-screen {
+  display: grid;
+  gap: clamp(22px, 2.6vw, 36px);
+}
+
+.cs-screen-copy {
+  display: grid;
+  gap: 14px;
+  max-width: var(--cs-measure);
+}
+
+.cs-screen-copy h3 {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.2vw, 1.85rem);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.cs-screen-copy p {
+  margin: 0;
+  color: var(--cs-body);
+  font-size: 1.02rem;
+  line-height: 1.74;
+}
+
+.cs-screen-detail {
+  padding-left: 20px;
+  border-left: 2px solid var(--cs-rule);
+  color: var(--cs-muted) !important;
+  font-size: 0.95rem !important;
+}
+
+/* The screen stages break the content rail and run wide. */
+.cs-screens .cs-stage,
+.cs-section > .cs-stage {
+  margin-inline: calc(var(--cs-wide) - var(--cs-gutter));
+}
+
+/* ----------------------------------------------------------- outcomes ---- */
+
+.cs-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(26px, 3.4vw, 52px);
+  margin: 0 0 clamp(50px, 7vw, 96px);
+  padding: 0;
+  list-style: none;
+}
+
+.cs-stats li {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding-top: 22px;
+  border-top: 1px solid var(--cs-rule);
+}
+
+.cs-stats strong {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.cs-stats b {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cs-stats span {
+  color: var(--cs-body);
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 .cs-outcome-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 16px 40px;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 0 clamp(30px, 4vw, 64px);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .cs-outcome-list li {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--cs-line-soft);
-  color: var(--cs-body);
-  font-size: 1rem;
-  line-height: 1.65;
-}
-
-.cs-outcome-list span {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  flex: none;
-  margin-top: 2px;
-  border-radius: 999px;
-  background: rgba(74, 222, 128, 0.16);
-  color: #4ade80;
-}
-
-.cs-outcome-list svg {
-  width: 14px;
-  height: 14px;
+  padding-block: 20px;
+  border-top: 1px solid var(--cs-rule);
+  color: var(--cs-ink);
+  font-size: 1.02rem;
+  line-height: 1.66;
 }
 
 .cs-stack {
   display: grid;
-  gap: 16px;
-  margin-top: clamp(34px, 4vw, 56px);
+  gap: 12px;
+  margin-top: clamp(44px, 6vw, 80px);
+  padding-top: clamp(24px, 3vw, 36px);
+  border-top: 1px solid var(--cs-rule);
 }
 
-.cs-stack > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.cs-stack span {
+  color: var(--cs-muted);
 }
 
-.cs-stack span:not(.cs-section-kicker) {
-  padding: 9px 18px;
-  border: 1px solid var(--cs-line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--cs-body);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-/* ------------------------------------------------------------------ cta */
-
-.cs-cta {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(26px, 4vw, 60px);
-  align-items: center;
-  margin: 0 var(--cs-gutter) clamp(56px, 7vw, 96px);
-  padding: clamp(38px, 5vw, 68px) clamp(30px, 4vw, 62px) !important;
-  border-radius: 30px;
-  background:
-    radial-gradient(60% 90% at 90% 10%, rgba(37, 99, 235, 0.26), transparent 60%),
-    linear-gradient(135deg, #070d1c, #101c38);
-  color: #ffffff;
-}
-
-.cs-cta h2 {
-  margin: 12px 0 12px;
-}
-
-.cs-cta p {
+.cs-stack p {
   margin: 0;
-  max-width: 52ch;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.02rem;
+  max-width: 70ch;
+  color: var(--cs-body);
+  font-size: 1rem;
   line-height: 1.7;
 }
 
-.cs-cta-actions {
+/* --------------------------------------------------------------- next ---- */
+
+.cs-next {
+  display: grid;
+  gap: 22px;
+  padding-block: clamp(70px, 11vw, 160px);
+  border-top: 1px solid var(--cs-rule);
+}
+
+.cs-next h2 {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+}
+
+.cs-next p {
+  margin: 0;
+  max-width: var(--cs-measure);
+  color: var(--cs-body);
+  font-size: clamp(1.05rem, 1.3vw, 1.18rem);
+  line-height: 1.72;
+}
+
+.cs-next-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  margin-top: 12px;
 }
 
-.cs-cta .about-btn-primary {
-  background: #ffffff;
-  color: #0b1830;
-}
+/* ------------------------------------------------------------- reveal ---- */
 
-.cs-cta .about-btn-ghost {
-  border-color: rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
-}
+/* Uses the shared [data-reveal] system in components/ScrollAnimator.tsx. */
 
-/* ------------------------------------------------------- reduced motion */
+/* --------------------------------------------------------- responsive ---- */
 
-@media (prefers-reduced-motion: reduce) {
-  /* Nothing on this page may depend on motion to become readable. */
-  .cs-crumbs,
-  .cs-kicker,
-  .cs-lede,
-  .cs-meta > div,
-  .cs-hero-line > span {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
+/* Reduced-motion overrides removed — the reel is the centrepiece of the
+   case study and must always auto-play with smooth transitions. */
 
-  /* The ambient layer keeps its colour but stops moving entirely. */
-  .cs-ambient-blob,
-  .cs-ambient-mesh,
-  .cs-ambient-streak {
-    animation: none;
-  }
-
-  .cs-ambient-streak {
-    opacity: 0.3;
-  }
-
-  .cs-seq-frame,
-  .cs-seq-chapter,
-  .cs-flow-track li::after {
-    transition: none;
-  }
-
-  .cs-seq-chapter {
-    opacity: 1;
-  }
-}
-
-/* ----------------------------------------------------------- responsive */
-
-@media (max-width: 1080px) {
-  .cs-overview,
-  .cs-spotlight,
-  .cs-system-grid,
-  .cs-cta {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .cs-spotlight {
-    padding-inline: var(--cs-gutter) !important;
-  }
-
-  .cs-cta-actions {
-    justify-content: flex-start;
-  }
-}
-
-/* Below 900px the stage moves above the chapters but stays sticky, so the
-   device is still visible while its chapter is being read. */
 @media (max-width: 900px) {
-  .cs-seq {
-    display: block;
-  }
-
-  /* `display: contents` drops the wrapper so the sticky stage's containing
-     block becomes .cs-seq — stacked in one column the wrapper is only as tall
-     as the stage itself, which would leave sticky nowhere to travel. */
-  .cs-seq-stage-col {
-    display: contents;
-  }
-
-  .cs-seq-stage {
-    /* Clears the sticky site header, which is 78px at this breakpoint. */
-    top: 78px;
-    z-index: 2;
-    /* Fully opaque: chapters scroll underneath the pinned stage, so a partial
-       fade would let their text show through the device and legend. */
-    padding-block: 14px 12px;
-    background: var(--cs-bg);
-    box-shadow: 0 14px 18px -14px rgba(0, 0, 0, 0.8);
-  }
-
-  .cs-seq-frames {
-    /* Leave room for the chapter copy under the device. */
-    max-height: 44vh;
-  }
-
-  .cs-seq-chapter {
-    min-height: 0;
-    padding-block: clamp(20px, 5vh, 40px);
-    opacity: 1;
-  }
-}
-
-@media (max-width: 760px) {
-  /* Header shrinks again at this breakpoint. */
-  .cs-seq-stage {
-    top: 70px;
-  }
-
-  .cs-showcase {
-    margin-top: clamp(-120px, -22vw, -70px);
-  }
-
-  .cs-meta {
+  .cs-intro {
+    grid-template-columns: minmax(0, 1fr);
     gap: 20px;
   }
 
-  .cs-flow-track li::after {
-    display: none;
+  /* The tilt costs legibility at small sizes for no gain — flatten it. */
+  .cs-monitor-body {
+    transform: none;
   }
 
-  .cs-quote blockquote {
-    text-align: left;
+  .cs-monitor {
+    perspective: none;
+    /* Width-limited here, not height-limited, so drop the viewport term. */
+    width: min(1120px, 100%);
+  }
+
+  /* Forcing a full viewport here just adds dead space above and below a
+     width-limited display — let the band size to its content instead. */
+  .cs-hero-media > .cs-reel {
+    min-height: 0;
+    padding-top: clamp(72px, 12vh, 104px);
+    padding-bottom: clamp(24px, 4vh, 40px);
+  }
+
+
+  .cs-compare li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .cs-compare-num {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .cs-stage {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+
+  /* Slower, gentler scroll on mobile */
+  .cs-stage .cm-app {
+    animation-duration: 18s;
+  }
+
+  .cs-outcome-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

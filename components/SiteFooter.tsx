@@ -62,6 +62,7 @@ export default function SiteFooter() {
             <a href="tel:+918197731627">+91 8197731627</a>
             <a href="mailto:Info@rockonesolutions.com">Info@rockonesolutions.com</a>
             <span>Site No. 157, 9th Main, Sector 06, HSR Layout, Bengaluru, Karnataka, 560102</span>
+            <span>GSTIN:- 29PAVPS8370D1ZI</span>
           </div>
         </div>
       </div>

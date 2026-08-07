@@ -13,16 +13,29 @@
   background: #f7fafd;
   border: 1px solid rgba(20, 40, 80, 0.1);
   box-shadow: 0 40px 90px -30px rgba(13, 30, 66, 0.45);
+  display: flex;
+  flex-direction: column;
 }
 
 .crm-frame-chrome {
   height: 34px;
+  flex: none;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 0 14px;
   border-bottom: 1px solid #e5ecf5;
   background: linear-gradient(180deg, #ffffff, #f2f6fb);
+}
+
+.cm-screen-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: top center;
+  flex: 1;
+  min-height: 0;
 }
 
 .crm-frame-chrome i {
@@ -210,8 +223,8 @@
 /* ------------------------------------------------------------------ topbar */
 
 .cm-body {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
@@ -296,8 +309,11 @@
 /* ------------------------------------------------------------------ canvas */
 
 .cm-canvas {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  flex: 1;
   gap: 1.3em;
   padding: 1.6em 1.8em;
   overflow: hidden;
@@ -507,8 +523,10 @@
 /* --------------------------------------------------------- dashboard: hero */
 
 .cm-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 21em;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 1.6em;
   padding: 1.7em;
   border: 1px solid #dce9fa;
@@ -519,6 +537,8 @@
 }
 
 .cm-hero-copy {
+  flex: 1 1 18em;
+  min-width: 0;
   display: grid;
   align-content: start;
   gap: 0.75em;
@@ -565,6 +585,9 @@
 }
 
 .cm-hero-filter {
+  flex: 1 1 21em;
+  max-width: 22em;
+  min-width: 0;
   display: grid;
   align-content: start;
   gap: 0.5em;

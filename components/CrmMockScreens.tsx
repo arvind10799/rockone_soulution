@@ -111,15 +111,15 @@ function Sidebar({ active, role }: { active: string; role: Role }) {
   );
 }
 
-function TopBar({ title, role }: { title: string; role: Role }) {
+function TopBar({ title, role, userName = "John Doe", userEmail = "john.doe@example.com" }: { title: string; role: Role; userName?: string; userEmail?: string }) {
   return (
     <header className="cm-top">
       <span className="cm-top-title">{title}</span>
       <div className="cm-top-right">
         {role === "sales" ? (
           <span className="cm-top-user">
-            <b>John Doe</b>
-            <small>john.doe@example.com</small>
+            <b>{userName}</b>
+            <small>{userEmail}</small>
           </span>
         ) : null}
         <span className="cm-pill">{role === "admin" ? "Admin" : "Sales"}</span>
@@ -140,18 +140,22 @@ function Shell({
   title,
   active,
   role,
+  userName,
+  userEmail,
   children
 }: {
   title: string;
   active: string;
   role: Role;
+  userName?: string;
+  userEmail?: string;
   children: ReactNode;
 }) {
   return (
     <div className="cm-app">
       <Sidebar active={active} role={role} />
       <div className="cm-body">
-        <TopBar title={title} role={role} />
+        <TopBar title={title} role={role} userName={userName} userEmail={userEmail} />
         <div className="cm-canvas">{children}</div>
       </div>
     </div>
@@ -203,11 +207,11 @@ const week = [
 
 export function DashboardScreen() {
   return (
-    <Shell title="Dashboard" active="Dashboard" role="sales">
+    <Shell title="Dashboard" active="Dashboard" role="sales" userName="Tom Ryder" userEmail="tom@meeautoparts.com">
       <section className="cm-hero">
         <div className="cm-hero-copy">
           <span className="cm-eyebrow">{icons.target} Sales command center</span>
-          <h1>Good day, John.</h1>
+          <h1>Good day, Tom.</h1>
           <p>
             Your dashboard now highlights pipeline health, priority follow-ups, shipment alerts,
             and revenue signals in one focused workspace.
@@ -799,6 +803,8 @@ export type CrmChapter = {
   protects: string;
   url: string;
   node: ReactNode;
+  /** Optional alternative node for the stage / prototyping section. */
+  stageNode?: ReactNode;
 };
 
 /**
@@ -816,7 +822,20 @@ export const crmScreens: CrmChapter[] = [
     protects:
       "Every card leads with the figure at display weight, then explains it. A manager scanning the dashboard reads values before they read words.",
     url: "crm.meeautoparts.com/dashboard",
-    node: <DashboardScreen />
+    node: (
+      <img
+        src="/images/crm-dashboard.png"
+        alt="Auto Parts CRM Dashboard"
+        className="cm-screen-img"
+      />
+    ),
+    stageNode: (
+      <img
+        src="/images/crm-dashboard-stage.jpg"
+        alt="Auto Parts CRM Dashboard"
+        className="cm-screen-img"
+      />
+    )
   },
   {
     id: "leads",
